@@ -1,0 +1,16 @@
+
+.*
+!.gitignore
+
+*~
+Settings.php
+Settings_bak.php
+shop
+
+cache/*
+cache/index.php
+!cache/.htaccess
+
+attachments/*
+attachments/index.php
+!attachments/.htaccess

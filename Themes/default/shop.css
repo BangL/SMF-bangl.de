@@ -1,0 +1,164 @@
+/* Common Stuff */
+h4 {
+    margin: 0.2em 0 0.4em 0;
+    font-size: 120%;
+}
+h4, ul {
+    padding: 0;
+}
+.shop_bold {
+    font-weight: bold;
+}
+
+img.shop_icon {
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+    margin: -2px 5px 0 0;
+}
+
+/* Wrapper */
+div#shop {
+    clear: both;
+}
+#shop span.botslice {
+    clear: both;
+}
+div.shop_wrapper {
+    float: left;
+    width: 100%;
+}
+div.shop_errors {
+    color: red;
+    border: 1px solid red;
+    padding: 5px;
+    margin-right: 5px;
+}
+div.shop_success {
+    color: green;
+    border: 1px solid green;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+/* Left Side */
+div.shop_left {
+    float: left;
+    width: 15em;
+}
+div.shop_left h4 {
+    margin: 0 1em 0 1.1em;
+}
+div.shop_left hr {
+    padding: 0;
+    margin: 0 1em 1em 1.1em;
+}
+ul.shop_price {
+    padding: 0;
+    margin: 0 1em 2em 1.5em;
+}
+div.shop_cart {
+    padding: 0;
+    margin: 0 1em 0.5em 1.5em;
+}
+
+/* Right Side */
+div.shop_right {
+    margin: 0 0 0 16em;
+}
+div.shop_right div.flow_hidden {
+    width: 100%;
+}
+/* perk cart view */
+table.cart{
+    width: 100%;
+}
+table.cart tr, table.cart td{
+    border: 1px solid lightgrey;
+    padding: 5px;
+}
+a.righttext {
+    float: right;
+}
+/* Add/Edit Perk View */
+label {
+    padding-top: 5px;
+    width: 344px;
+}
+div.perk_settings input.text {
+    width: 50px;
+}
+input.text {
+    width: 344px;
+}
+textarea {
+    width: 700px;
+    height: 200px;
+}
+div.perk_data {
+    float: none;
+}
+#command_add, #expiry_command_add {
+    width: 16px;
+    height: 16px;
+}
+div#perk_commands {
+    width: 350px;
+    margin-right: 5px;
+    margin-left: 5px;
+    float: left;
+}
+div#perk_expiry_commands {
+    width: 350px;
+    margin-left: 361px;
+}
+div.perk_setting {
+    margin-right: 5px;
+    margin-left: 5px;
+    float: left;
+    margin-bottom: 10px;
+}
+div.perk_setting div {
+    width: 90px;
+}
+div.perk_name div,
+div.perk_submit div,
+div.shop_paypal div,
+div.shop_perk_details div,
+div.shop_cart_view div,
+div.perk_settings,
+div.shop_index div {
+    width: 706px;
+    margin-right: 5px;
+    margin-left: 5px;
+    float: none;
+    clear: both;
+}
+div.perk_name,
+div.perk_command_wrapper,
+div.perk_settings,
+div.perk_submit {
+    margin-top: 10px;
+}
+p.perk_details_left {
+    width: 400px;
+    float: left;
+}
+p.perk_details_right {
+    margin: 0 0 1em 580px;
+}
+p.lifetime {
+    float: right;
+}
+.clearfix {
+    clear: both;
+}
+span.perk_price {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+/* Bottom Bar*/
+div.shop_bar {
+    clear: right;
+}

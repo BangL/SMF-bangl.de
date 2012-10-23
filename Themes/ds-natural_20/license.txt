@@ -1,0 +1,24 @@
+Ownership
+---------
+
+You may not claim intellectual or exclusive ownership to any of our products, modified or unmodified. All products are property of DzinerStudio.com. Notice: Re-use of any graphics or icons for any purpose other than in DzinerStudio products is strictly prohibited.
+
+Unauthorized Use
+----------------
+You may not place any of our products, modified or unmodified, on a disk, CD, website or any other medium and offer them for re-distribution or re-sale of any kind without prior written consent from DzinerStudio.com. Please contact us if you require more information.
+
+Modifications
+-------------
+You are allowed to make any necessary modification(s) to our themes to suit your needs. It's not permitted to remove our copyright information from the footer. You are however allowed to add your own name onto our copyright (i.e. "Design by DzinerStudio / Modified by your name").
+
+Warranty
+--------
+DzinerStudio.com does not warranty or guarantee these themes in any manner. We cannot guarantee they will function with all 3rd party modifications, plugins or web browsers. Although our themes were tested in all major browsers (IE, FireFox, Opera, Safari), browser compatibility should be tested against the demonstration themes on the demo server. Please be aware of that.
+
+Updates
+-------
+All themes are always designed to be compatible with the latest stable version of SMF, but we can give no guarantee, that older themes will run with future versions of SMF. We will however try our best to make all themes compatible with future versions of SMF.
+
+Support
+-------
+Please notice that we're not providing support by email. Should you require any help regarding installation or modification of our themes, please use our private support boards onto our forum.
