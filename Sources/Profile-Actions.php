@@ -211,6 +211,9 @@ function issueWarning($memID)
 			// Make the change.
 			updateMemberData($memID, array('warning' => $_POST['warning_level']));
 
+			if ($context['user']['is_owner'])
+					$context['minecraft_name_updated'] = $txt['updated_mcname_own'];
+
 			// Leave a lovely message.
 			$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : $txt['profile_warning_success'];
 		}

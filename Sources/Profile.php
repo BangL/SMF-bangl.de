@@ -617,6 +617,7 @@ function ModifyProfile($post_errors = array())
 					$saveFunc();
 
 			// Let them know it worked!
+			$context['minecraft_name_updated'] = $context['user']['is_owner'] ? $txt['updated_mcname_own'] : sprintf($txt['updated_mcname_else'], $cur_profile['validate_code']);
 			$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $cur_profile['member_name']);
 
 			// Invalidate any cached data.
