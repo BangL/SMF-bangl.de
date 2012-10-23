@@ -7,10 +7,10 @@ Settings.php
 Settings_bak.php
 shop
 
-cache/*_*
+cache/data_*.php
 !cache/index.php
 !cache/.htaccess
 
-attachments/data_*.php
+attachments/*_*
 !attachments/index.php
 !attachments/.htaccess
