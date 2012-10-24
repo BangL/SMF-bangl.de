@@ -356,7 +356,18 @@ function ModifyProfile($post_errors = array())
 
 	// Is there an updated message to show?
 	if (isset($_GET['updated']))
+	{
 		$context['profile_updated'] = $txt['profile_updated_own'];
+		if (trim($_GET['updated']) != '')
+		{
+			$context['profile_updated'] = $context['profile_updated'] .
+					sprintf('<br />
+					<strong>You changed your Minecraft Name.
+					Use &quot;/av %1$s&quot;
+					on the BangL.de Minecraft Server to validate this Minecraft Name!</strong>',
+					trim($_GET['updated']));
+		}
+	}
 
 	// Set a few options for the menu.
 	$menuOptions = array(
@@ -617,8 +628,21 @@ function ModifyProfile($post_errors = array())
 					$saveFunc();
 
 			// Let them know it worked!
-			$context['minecraft_name_updated'] = $context['user']['is_owner'] ? $txt['updated_mcname_own'] : sprintf($txt['updated_mcname_else'], $cur_profile['validate_code']);
-			$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $cur_profile['member_name']);
+			$context['profile_updated'] =
+					$context['user']['is_owner']?
+					$txt['profile_updated_own']:
+					sprintf($txt['profile_updated_else'], $cur_profile['member_name']);
+
+			if (isset($context['mcValidateCode']))
+			{
+				$context['profile_updated'] = $context['profile_updated'] .
+						sprintf('<br />
+						<strong>You changed the Minecraft Name for %1$s.
+						Tell him/her to use &quot;/av %2$s&quot;
+						on the BangL.de Minecraft Server to validate his/her Minecraft Name!</strong>',
+						$cur_profile['member_name'],
+						$context['mcValidateCode']);
+			}
 
 			// Invalidate any cached data.
 			cache_put_data('member_data-profile-' . $memID, null, 0);
@@ -633,10 +657,22 @@ function ModifyProfile($post_errors = array())
 			$context['modify_error'][$error_type] = true;
 	}
 	// If it's you then we should redirect upon save.
-	elseif (!empty($profile_vars) && $context['user']['is_owner'])
-		redirectexit('action=profile;area=' . $current_area . ';updated');
+	elseif (!empty($profile_vars)
+			&& $context['user']['is_owner'])
+	{
+		if (isset($context['mcValidateCode']))
+		{
+			redirectexit('action=profile;area=' . $current_area . ';updated=' . $context['mcValidateCode']);
+		}
+		else
+		{
+			redirectexit('action=profile;area=' . $current_area . ';updated');
+		}
+	}
 	elseif (!empty($force_redirect))
+	{
 		redirectexit('action=profile' . ($context['user']['is_owner'] ? '' : ';u=' . $memID) . ';area=' . $current_area);
+	}
 
 	// Call the appropriate subaction function.
 	$profile_include_data['function']($memID);

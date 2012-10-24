@@ -1340,7 +1340,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 		);
 		// ======= edit by BangL start
 		// Was this the Minecraft Name?
-		if ($changes[1] == "cust_minecr") {
+		if ($changes[0][1] == "cust_minecr") {
 			// Set Validated to false
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}themes',
@@ -1354,14 +1354,14 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 						'id_member')
 			);
 			// Generate a new validate code and save it.
-			$validateCode = uniqid();
+			$context['mcValidateCode'] = uniqid();
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}themes',
 				array('id_theme' => 'int',
 						'variable' => 'string-255',
 						'value' => 'string-65534',
 						'id_member' => 'int'),
-				array(1, "cust_valida0", $validateCode, $memID),
+				array(1, "cust_valida0", $context['mcValidateCode'], $memID),
 				array('id_theme',
 						'variable',
 						'id_member')

@@ -2807,6 +2807,11 @@ div#profile_success
 	background: #efe;
 }
 
+div#profile_success span.bold
+{
+	font-weight: bold;
+}
+
 /* Profile statistics */
 #generalstats div.content dt
 {

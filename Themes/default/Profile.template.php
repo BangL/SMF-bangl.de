@@ -36,14 +36,6 @@ function template_profile_above()
 					<div class="windowbg" id="profile_success">
 						', $context['profile_updated'], '
 					</div>';
-	// ======= edit by BangL start
-	// If the Minecraft Name was changed show the validation code message.
-	if (!empty($context['minecraft_name_updated']))
-		echo '
-					<div class="windowbg" id="minecraft_name_validation_code">
-						', $context['minecraft_name_updated'], '
-					</div>';
-	// ======= edit by BangL end
 }
 
 // Template for closing off table started in profile_above.

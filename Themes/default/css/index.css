@@ -2950,7 +2950,7 @@ dl
 }
 
 /* Simple feedback messages */
-div#profile_error, div#profile_success, div#minecraft_name_validation_code
+div#profile_error, div#profile_success
 {
 	margin: 0 0 1em 0;
 	padding: 1em 2em;
@@ -2974,15 +2974,6 @@ div#profile_success
 	color: green;
 	background: #efe;
 }
-
-/* ======= edit by BangL start */
-div#minecraft_name_validation_code
-{
-	border-color: red;
-	color: red;
-	background: #fee;
-}
-/* ======= edit by BangL start */
 
 /* Profile statistics */
 #generalstats div.content dt

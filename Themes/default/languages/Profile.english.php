@@ -357,9 +357,6 @@ $txt['request_group_membership'] = 'Request Group Membership';
 $txt['request_group_membership_desc'] = 'Before you can join this group your membership must be approved by the moderator. Please give a reason for joining this group';
 $txt['submit_request'] = 'Submit Request';
 
-$txt['updated_mcname_own'] = 'You changed your Minecraft Name. Use &quot;<span class=\"bold\">/av %1$s</span>&quot; on the BangL.de Minecraft Server to validate your Minecraft Name.';
-$txt['updated_mcname_else'] = 'You changed the Minecraft Name for %1$s. Tell him/her to use &quot;<span class=\"bold\">/av %2$s</span>&quot; on the BangL.de Minecraft Server to validate his/her Minecraft Name.';
-
 $txt['profile_updated_own'] = 'Your profile has been updated successfully.';
 $txt['profile_updated_else'] = 'The profile for %1$s has been updated successfully.';
 
