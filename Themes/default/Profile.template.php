@@ -1127,7 +1127,7 @@ function template_statPanel()
 // Template for editing profile options.
 function template_edit_options()
 {
-	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+	global $context, $settings, $options, $scripturl, $modSettings, $txt, $user_info;
 
 	// The main header!
 	echo '
@@ -1279,7 +1279,19 @@ function template_edit_options()
 			echo '
 						<dt>
 							<strong>', $field['name'], ': </strong><br />
-							<span class="smalltext">', $field['desc'], '</span>
+							<span class="smalltext">';
+			if ($field['colname'] != "cust_minecr")
+			{
+				echo '
+								' . $field['desc'];
+			}
+			else
+			{
+				echo '
+								' . $user_info['mc_desciption'];
+			}
+			echo '
+							</span>
 						</dt>
 						<dd>
 							', $field['input_html'], '

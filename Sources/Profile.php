@@ -709,7 +709,9 @@ function loadCustomFields($memID, $area = 'summary')
 			col_name, field_name, field_desc, field_type, field_length, field_options,
 			default_value, bbc, enclose, placement
 		FROM {db_prefix}custom_fields
-		WHERE ' . $where,
+		WHERE ' . $where . '
+		OR col_name = "cust_valida0"
+		OR col_name = "cust_valida"',
 		array(
 			'area' => $area,
 		)
@@ -790,18 +792,71 @@ function loadCustomFields($memID, $area = 'summary')
 				'{INPUT}' => $output_html,
 			));
 
-		$context['custom_fields'][] = array(
-			'name' => $row['field_name'],
-			'desc' => $row['field_desc'],
-			'type' => $row['field_type'],
-			'input_html' => $input_html,
-			'output_html' => $output_html,
-			'placement' => $row['placement'],
-			'colname' => $row['col_name'],
-			'value' => $value,
-		);
+		if ($area == 'summary'
+				|| $row['col_name'] != "cust_valida")
+		{
+			$context['custom_fields'][] = array(
+				'name' => $row['field_name'],
+				'desc' => $row['field_desc'],
+				'type' => $row['field_type'],
+				'input_html' => $input_html,
+				'output_html' => $output_html,
+				'placement' => $row['placement'],
+				'colname' => $row['col_name'],
+				'value' => $value,
+			);
+		}
+
+		// Check if validated
+		if ($row['col_name'] == "cust_valida"
+				&& $value == "1")
+		{
+			$user_info['mc_validated'] = true;
+			$user_info['mc_desciption'] = "<span>Validated</span>";
+		}
 	}
 	$smcFunc['db_free_result']($request);
-}
 
+	// Generate a new validate code, if none in db yet
+	for ($i = 0; $i <= count($context['custom_fields']) - 1; $i++)
+	{
+		if ($context['custom_fields'][$i]['colname'] == "cust_valida0")
+		{
+			if (!isset($user_info['mc_validated'])
+					|| !$user_info['mc_validated'])
+			{
+				$user_info['mc_validate_code'] = $context['custom_fields'][$i]['value'];
+				if ($user_info['mc_validate_code'] == "")
+				{
+					// Generate a new validate code and save it.
+					$user_info['mc_validate_code'] = uniqid();
+					$smcFunc['db_insert']('replace',
+						'{db_prefix}themes',
+						array('id_theme' => 'int',
+								'variable' => 'string-255',
+								'value' => 'string-65534',
+								'id_member' => 'int'),
+						array(1, "cust_valida0", $user_info['mc_validate_code'], $memID),
+						array('id_theme',
+								'variable',
+								'id_member')
+					);
+				}
+			}
+			if ($area != 'summary'
+					|| (!allowedTo('admin_forum')
+					&& $memID != $user_info['id']))
+			{
+				unset($context['custom_fields'][$i]);
+			}
+		}
+	}
+
+	// Change description of "Minecraft Name" 
+	if (!isset($user_info['mc_validated'])
+			|| !$user_info['mc_validated'])
+	{
+		$user_info['mc_desciption'] = "<span class=\"meaction\">Please use \"<strong>/va " . $user_info['mc_validate_code'] . "</strong>\" on the bangl.de minecraft server to validate this account.</span>";
+	}
+}
 ?>
