@@ -169,6 +169,8 @@ function ShopCart() {
     if (empty($context["shop_cart_items"])) {
         ShopIndex();
         return;
+    } else {
+        $context["shop_sa"] = "cart";
     }
 
     PerkMenu();
@@ -643,12 +645,6 @@ function ShopSuccess() {
     if ($context["user"]["is_logged"]) {
         array_push($context["shop_success"], "Thank you for your Donation.");
 
-        // DEBUG
-        foreach ($_POST as $key => $value) {
-            array_push($context["shop_success"], "$key: $value");
-        }
-        // DEBUG END
-
         // TODO: Delete cart here
 
         ShopIndex();
@@ -659,7 +655,7 @@ function ShopCancel() {
     global $context;
     if ($context["user"]["is_logged"]) {
         array_push($context["shop_errors"], "The order was canceled!");
-        ShopIndex();
+        ShopCart();
     }
 }
 

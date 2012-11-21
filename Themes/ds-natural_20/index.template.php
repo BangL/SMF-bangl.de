@@ -165,7 +165,7 @@ function template_html_above()
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>';
-if (isset($context["donate_payment_data"])) {
+if (isset($context["shop_sa"]) && $context["shop_sa"] == "checkout") {
     echo "<body onLoad=\"document.forms['paypal_form'].submit();\">\n";
 } else {
     echo '<body>';
