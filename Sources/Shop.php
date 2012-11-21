@@ -645,7 +645,8 @@ function ShopSuccess() {
     if ($context["user"]["is_logged"]) {
         array_push($context["shop_success"], "Thank you for your purchase.");
 
-        // TODO: Delete cart here
+        //Clear cart
+        db_clear_cart($context["user"]["id"]);
 
         ShopIndex();
     }
@@ -1078,6 +1079,24 @@ function db_remove_cartitem($member_id, $perk_id) {
     }
     $smcFunc['db_free_result']($result);
 
+}
+
+function db_clear_cart($member_id) {
+    global $context, $smcFunc;
+    if (!$context["user"]["is_logged"]) return;
+
+    // Remove all perks from cart
+    $result = $smcFunc['db_query']('', '
+        DELETE FROM pp_cartitems
+        WHERE member_id = {int:member_id}
+    ',array(
+        "member_id" => $member_id
+    ));
+    if (!$result) {
+        array_push($context["shop_errors"], $smcFunc['db_error']());
+        return;
+    }
+    $smcFunc['db_free_result']($result);
 }
 
 function db_add_perk($perk_data) {
