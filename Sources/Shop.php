@@ -510,7 +510,7 @@ function ShopCheckout() {
             return;
         }
 
-        // This will be our result, we send to paypal as donation value
+        // This will be our result, we send to paypal as sum
         $ordersum=0;
 
         foreach ($items as $item) {
@@ -628,7 +628,7 @@ function ShopCheckout() {
             'return' => 'http://bangl.de/index.php?action=shop&sa=success',
             'cancel_return' => 'http://bangl.de/index.php?action=shop&sa=cancel',
             'notify_url' => 'http://bangl.de/index.php?action=shop&sa=ipn',
-            'item_name' => "Donation",
+            'item_name' => "Perks",
             'amount' => $ordersum,
             'key' => md5(date("Y-m-d:").rand()),
             'item_number' => $orderid,
@@ -643,7 +643,7 @@ function ShopCheckout() {
 function ShopSuccess() {
     global $context;
     if ($context["user"]["is_logged"]) {
-        array_push($context["shop_success"], "Thank you for your Donation.");
+        array_push($context["shop_success"], "Thank you for your purchase.");
 
         // TODO: Delete cart here
 
