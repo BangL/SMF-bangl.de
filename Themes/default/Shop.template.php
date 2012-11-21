@@ -324,8 +324,7 @@ function template_main() {
                                                 <div>
                                                     <textarea name="perk_description">');
                                                     if (isset($context["shop_perk_details"]["perk_id"])) {
-                                                        echo(htmlspecialchars(stripslashes(preg_replace('/\\\n/', '
-', un_htmlspecialchars($context["shop_perk_details"]["perk_desc"])))));
+                                                        echo(htmlspecialchars(stripslashes(preg_replace('/\\\n/', "\n", un_htmlspecialchars($context["shop_perk_details"]["perk_desc"])))));
                                                     }
                                                     echo('</textarea>
                                                 </div>
