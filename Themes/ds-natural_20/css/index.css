@@ -3519,6 +3519,8 @@ span.hidelink
 #logo a {
 	position: absolute;
 	left: 10;
+	box-shadow: inset 8px 8px 8px #666;
+	border-radius: 15px;
 	top: 20;
 	display: block;
 	width: 970px;

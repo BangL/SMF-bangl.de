@@ -170,6 +170,28 @@ if (isset($context["shop_sa"]) && $context["shop_sa"] == "checkout") {
 } else {
     echo '<body>';
 }
+echo '
+
+<div style="display: none">
+
+<!-- Begin Gtop100 voting code --><br />
+<a href="http://www.gtop100.com/in.php?site=75746" title="Top 100 Minecraft sites" target="_blank">
+<img src="http://www.gtop100.com/images/votebutton.jpg" border="0" alt="Top 100 Minecraft sites"></a>
+<!-- End Gtop100s voting code -->
+
+<!-- Begin Fansite List code -->
+<span style="display: none;"><a href="http://fansitelist.com/in/228020/bangl.de/">Fansite List!</a></span>
+<a href="http://fansitelist.com/in/228020/bangl.de/"><img src="http://fansitelist.com/votebutton.gif" border="0" alt="Fansite List!" /></a>
+<!-- End Fansite List code -->
+
+<!-- TOPG Vote Start Code --> <a href="http://topg.org/Minecraft/in-354849" target="_blank"><img src="http://topg.org/topg2.gif" border="0" alt="Minecraft Servers"></a> <!-- TOPG Vote End Code -->
+
+<a href="http://www.top100arena.com/minecraft/" title="Minecraft private server"><img src="http://www.top100arena.com/hit.asp?id=79783&c=Minecraft&t=1" alt="Minecraft private server" width="88px" height="31px" border="0"></a>
+
+
+</div>
+
+';
 }
 
 function template_body_above()
