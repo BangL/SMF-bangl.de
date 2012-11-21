@@ -232,8 +232,12 @@ function template_main() {
                                                                 </option>
                                                             ');
                                                         }
+                                                        if ($context["shop_perk_details"]['perk_price'] > 0) {
+                                                            echo('
+                                                            <option value="0"'); if (!$selected) echo('selected="selected"'); echo('>Perk</option>
+                                                            ');
+                                                        }
                                                         echo('
-                                                        <option value="0"'); if (!$selected) echo('selected="selected"'); echo('>Perk</option>
                                                     </select>
                                                 </p>
                                                 ');
@@ -320,7 +324,8 @@ function template_main() {
                                                 <div>
                                                     <textarea name="perk_description">');
                                                     if (isset($context["shop_perk_details"]["perk_id"])) {
-                                                        echo(htmlspecialchars(stripslashes(un_htmlspecialchars($context["shop_perk_details"]["perk_desc"]))));
+                                                        echo(htmlspecialchars(stripslashes(preg_replace('/\\\n/', '
+', un_htmlspecialchars($context["shop_perk_details"]["perk_desc"])))));
                                                     }
                                                     echo('</textarea>
                                                 </div>
