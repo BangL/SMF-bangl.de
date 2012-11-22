@@ -691,21 +691,21 @@ function ShopCancel() {
 function ShopIPN() {
     global $p, $context, $smcFunc;
 
-    if ($p->validate_ipn()) { 
+    if ($p->validate_ipn()) {
 
         $order_email = $p->ipn_data['payer_email'];
         $order_id = $p->ipn_data['item_number'];
         $order_status = $p->ipn_data['payment_status'];
-        foreach ($p->ipn_data as $key => $value) {
+        /*foreach ($p->ipn_data as $key => $value) {
             $order_debugdata .= "\n$key: $value";
-        }
-        if($order_status == 'Completed' or $order_status == 'Pending'){
+        }*/
+        if($order_status == 'Completed' or $order_status == 'Pending') {
             $result = $smcFunc['db_query']('', '
                 UPDATE pp_orders
                 SET paid = {date:paid}
                 WHERE order_id = {int:order_id}
             ',array(
-                "paid" => $context["shop_thisdate"],
+                "paid" => date("Y-m-d H:i:s", $context["shop_thisdate"]),
                 "order_id" => $order_id,
             ));
             if (!$result) {

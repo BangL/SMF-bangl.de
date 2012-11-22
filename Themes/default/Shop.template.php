@@ -463,6 +463,10 @@ function template_main() {
                                 Without money, we are without server.<br />
                                 <br />
                                 Thank you!<br />
+                                <br />
+                                Click on the perks on the left to see a description.<br />
+                                <br />
+                                You can also check your active perks ingame, using the "/perk" command.<br />
                                 </div>
                                 </div>
                                 ');
