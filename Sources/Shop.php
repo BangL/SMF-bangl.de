@@ -427,44 +427,15 @@ function ShopCheckout() {
         $context["shop_transaction_started"] = true;
         $context["shop_transaction_done"] = false;
 
-        // Get all selected perks WITHOUT options
+        // Get the minecraft name of the user
         $result = $smcFunc['db_query']('', '
-            SELECT ci.perk_id, p.perk_price, p.perk_name, p.perk_desc, p.require_online, (o.perk_id >= 0) AS has_options
-            FROM pp_perks AS p
-            left JOIN pp_perk_options AS o ON o.perk_id = p.perk_id
-            left JOIN pp_cartitems AS ci ON ci.perk_id = p.perk_id AND ci.expiry_length = 0
-            WHERE member_id = {int:member_id} GROUP BY (ci.perk_id)
+            SELECT value
+            FROM {db_prefix}themes AS t
+            WHERE id_member = {int:id_member}
+            AND id_theme = 1
+            AND variable = "cust_minecr"
         ',array(
-            "member_id" => $context['user']['id'],
-        ));
-        if (!$result) {
-            array_push($context["shop_errors"], $smcFunc['db_error']());
-            ShopIndex();
-            return;
-        }
-        $items = array();
-        while ($row = $smcFunc['db_fetch_assoc']($result)) {
-            array_push($items, array(
-                "perk_id" => $row['perk_id'],
-                "perk_name" => $row['perk_name'],
-                "perk_desc" => $row['perk_desc'],
-                "perk_price" => $row['perk_price'],
-                "require_online" => $row["require_online"],
-                "expiry_length" => 0,
-                "has_options" => $row['has_options'],
-            ));
-        }
-        $smcFunc['db_free_result']($result);
-
-        // Get all selected perks WITH options
-        $result = $smcFunc['db_query']('', '
-            SELECT ci.perk_id, o.option_price, p.perk_name, p.perk_desc, p.require_online, ci.expiry_length
-            FROM pp_cartitems AS ci
-            JOIN pp_perk_options AS o ON ci.perk_id = o.perk_id AND ci.expiry_length > 0 AND ci.expiry_length = o.option_expiry_length
-            JOIN pp_perks AS p ON p.perk_id = ci.perk_id
-            WHERE member_id = {int:member_id}
-        ',array(
-            "member_id" => $context['user']['id'],
+            "id_member" => $context['user']['id'],
         ));
         if (!$result) {
             array_push($context["shop_errors"], $smcFunc['db_error']());
@@ -472,171 +443,227 @@ function ShopCheckout() {
             return;
         }
         while ($row = $smcFunc['db_fetch_assoc']($result)) {
-            array_push($items, array(
-                "perk_id" => $row['perk_id'],
-                "perk_name" => $row['perk_name'],
-                "perk_desc" => $row['perk_desc'],
-                "perk_price" => $row['option_price'],
-                "require_online" => $row["require_online"],
-                "expiry_length" => $row['expiry_length'],
-                "has_options" => 1,
-            ));
+            $context['user']['minecraft_name'] = $row['value'];
         }
         $smcFunc['db_free_result']($result);
-        if (count($items) == 0) {
-            array_push($context["shop_errors"], "No items in cart.");
-            ShopIndex();
-            return;
-        }
 
-        // Prepare order, to get the id for following foreign-keys
-        $smcFunc['db_insert'](
-            'replace',
-            'pp_orders',
-            array(
-                'member_id' => 'int',
-                'purchased' => 'string',
-            ),
-            array(
-                $context["user"]["id"],
-                date("Y-m-d H:i:s", $context["shop_thisdate"]),
-            )
-        ,array('order_id'));
-        // Get back the created order id
-        $orderid = $smcFunc['db_insert_id']('pp_orders', 'order_id');
-        if (!isset($orderid)) {
-            array_push($context["shop_errors"], 'Error creating order.');
-            ShopIndex();
-            return;
-        }
+        if (isset($context['user']['minecraft_name'])) {
+            // Get all selected perks WITHOUT options
+            $result = $smcFunc['db_query']('', '
+                SELECT ci.perk_id, p.perk_price, p.perk_name, p.perk_desc, p.require_online, (o.perk_id >= 0) AS has_options
+                FROM pp_perks AS p
+                left JOIN pp_perk_options AS o ON o.perk_id = p.perk_id
+                left JOIN pp_cartitems AS ci ON ci.perk_id = p.perk_id AND ci.expiry_length = 0
+                WHERE member_id = {int:member_id} GROUP BY (ci.perk_id)
+            ',array(
+                "member_id" => $context['user']['id'],
+            ));
+            if (!$result) {
+                array_push($context["shop_errors"], $smcFunc['db_error']());
+                ShopIndex();
+                return;
+            }
+            $items = array();
+            while ($row = $smcFunc['db_fetch_assoc']($result)) {
+                array_push($items, array(
+                    "perk_id" => $row['perk_id'],
+                    "perk_name" => $row['perk_name'],
+                    "perk_desc" => $row['perk_desc'],
+                    "perk_price" => $row['perk_price'],
+                    "require_online" => $row["require_online"],
+                    "expiry_length" => 0,
+                    "has_options" => $row['has_options'],
+                ));
+            }
+            $smcFunc['db_free_result']($result);
 
-        // This will be our result, we send to paypal as sum
-        $ordersum=0;
+            // Get all selected perks WITH options
+            $result = $smcFunc['db_query']('', '
+                SELECT ci.perk_id, o.option_price, p.perk_name, p.perk_desc, p.require_online, ci.expiry_length
+                FROM pp_cartitems AS ci
+                JOIN pp_perk_options AS o ON ci.perk_id = o.perk_id AND ci.expiry_length > 0 AND ci.expiry_length = o.option_expiry_length
+                JOIN pp_perks AS p ON p.perk_id = ci.perk_id
+                WHERE member_id = {int:member_id}
+            ',array(
+                "member_id" => $context['user']['id'],
+            ));
+            if (!$result) {
+                array_push($context["shop_errors"], $smcFunc['db_error']());
+                ShopIndex();
+                return;
+            }
+            while ($row = $smcFunc['db_fetch_assoc']($result)) {
+                array_push($items, array(
+                    "perk_id" => $row['perk_id'],
+                    "perk_name" => $row['perk_name'],
+                    "perk_desc" => $row['perk_desc'],
+                    "perk_price" => $row['option_price'],
+                    "require_online" => $row["require_online"],
+                    "expiry_length" => $row['expiry_length'],
+                    "has_options" => 1,
+                ));
+            }
+            $smcFunc['db_free_result']($result);
+            if (count($items) == 0) {
+                array_push($context["shop_errors"], "No items in cart.");
+                ShopIndex();
+                return;
+            }
 
-        foreach ($items as $item) {
-
-            // First we insert this item into the activation list
+            // Prepare order, to get the id for following foreign-keys
             $smcFunc['db_insert'](
                 'replace',
-                'pp_orders_perks',
+                'pp_orders',
                 array(
-                    'perk_id' => 'int',
-                    'order_id' => 'int',
-                    'perk_name' => 'string',
-                    'perk_desc' => 'text',
-                    'perk_price' => 'float',
-                    'perk_require_online' => 'int',
-                    'perk_expiry_length' => 'int',
-                    'has_options' => 'int',
+                    'member_id' => 'int',
+                    'purchased' => 'string',
+                    'player_name' => 'string',
                 ),
                 array(
-                    $item['perk_id'],
-                    $orderid,
-                    $item['perk_name'],
-                    $item['perk_desc'],
-                    $item['perk_price'],
-                    $item['require_online'],
-                    $item['expiry_length'],
-                    intval($item['has_options']),
+                    $context["user"]["id"],
+                    date("Y-m-d H:i:s", $context["shop_thisdate"]),
+                    $context["user"]["minecraft_name"],
                 )
-            ,array('order_perk_id'));
-            $orderperkid = $smcFunc['db_insert_id']('pp_orders_perks', 'order_perk_id');
-
-            // Get the commands for this perk
-            $result = $smcFunc['db_query']('', '
-                SELECT *
-                FROM pp_perk_commands
-                WHERE perk_id = {int:perk_id}
-            ',array(
-                "perk_id" => $item['perk_id'],
-            ));
-            if (!$result) {
-                array_push($context["shop_errors"], $smcFunc['db_error']());
+            ,array('order_id'));
+            // Get back the created order id
+            $orderid = $smcFunc['db_insert_id']('pp_orders', 'order_id');
+            if (!isset($orderid)) {
+                array_push($context["shop_errors"], 'Error creating order.');
                 ShopIndex();
                 return;
             }
-            // The list of all commands
-            $cmds = array();
-            while ($row = $smcFunc['db_fetch_assoc']($result)) {
-                array_push($cmds, $row['command']);
-            }
-            $smcFunc['db_free_result']($result);
 
-            // Put these commands in our orders tables
-            foreach ($cmds as $cmd) {
+            // This will be our result, we send to paypal as sum
+            $ordersum=0;
+
+            foreach ($items as $item) {
+
+                // First we insert this item into the activation list
                 $smcFunc['db_insert'](
                     'replace',
-                    'pp_orders_perks_commands',
+                    'pp_orders_perks',
                     array(
-                        'orders_perks_id' => 'int',
-                        'command' => 'string',
+                        'perk_id' => 'int',
+                        'order_id' => 'int',
+                        'perk_name' => 'string',
+                        'perk_desc' => 'text',
+                        'perk_price' => 'float',
+                        'perk_require_online' => 'int',
+                        'perk_expiry_length' => 'int',
+                        'has_options' => 'int',
                     ),
                     array(
-                        $orderperkid,
-                        $cmd,
+                        $item['perk_id'],
+                        $orderid,
+                        $item['perk_name'],
+                        $item['perk_desc'],
+                        $item['perk_price'],
+                        $item['require_online'],
+                        $item['expiry_length'],
+                        intval($item['has_options']),
                     )
-                ,array('orders_perks_commands_id'));
+                ,array('order_perk_id'));
+                $orderperkid = $smcFunc['db_insert_id']('pp_orders_perks', 'order_perk_id');
+
+                // Get the commands for this perk
+                $result = $smcFunc['db_query']('', '
+                    SELECT *
+                    FROM pp_perk_commands
+                    WHERE perk_id = {int:perk_id}
+                ',array(
+                    "perk_id" => $item['perk_id'],
+                ));
+                if (!$result) {
+                    array_push($context["shop_errors"], $smcFunc['db_error']());
+                    ShopIndex();
+                    return;
+                }
+                // The list of all commands
+                $cmds = array();
+                while ($row = $smcFunc['db_fetch_assoc']($result)) {
+                    array_push($cmds, $row['command']);
+                }
+                $smcFunc['db_free_result']($result);
+
+                // Put these commands in our orders tables
+                foreach ($cmds as $cmd) {
+                    $smcFunc['db_insert'](
+                        'replace',
+                        'pp_orders_perks_commands',
+                        array(
+                            'orders_perks_id' => 'int',
+                            'command' => 'string',
+                        ),
+                        array(
+                            $orderperkid,
+                            $cmd,
+                        )
+                    ,array('orders_perks_commands_id'));
+                }
+
+                // Get the expiry commands for this perk
+                $result = $smcFunc['db_query']('', '
+                    SELECT *
+                    FROM pp_perk_expiry_commands
+                    WHERE perk_id = {int:perkid}
+                ',array(
+                    "perkid" => $item['perk_id'],
+                ));
+                if (!$result) {
+                    array_push($context["shop_errors"], $smcFunc['db_error']());
+                    ShopIndex();
+                    return;
+                }
+                // The list of all expiry commands
+                $ecmds = array();
+                while ($row = $smcFunc['db_fetch_assoc']($result)) {
+                    array_push($ecmds, $row['expiry_command']);
+                }
+                $smcFunc['db_free_result']($result);
+
+                // Put these expiry commands in our orders tables
+                foreach ($ecmds as $ecmd) {
+                    $smcFunc['db_insert'](
+                        'replace',
+                        'pp_orders_perks_expiry_commands',
+                        array(
+                            'orders_perks_id' => 'int',
+                            'expiry_command' => 'string',
+                        ),
+                        array(
+                            $orderperkid,
+                            $ecmd,
+                        )
+                    ,array('orders_perks_expiry_commands_id'));
+                }
+
+                // finally add the price to the paypal sum
+                $ordersum+=$item['perk_price'];
             }
 
-            // Get the expiry commands for this perk
-            $result = $smcFunc['db_query']('', '
-                SELECT *
-                FROM pp_perk_expiry_commands
-                WHERE perk_id = {int:perkid}
-            ',array(
-                "perkid" => $item['perk_id'],
-            ));
-            if (!$result) {
-                array_push($context["shop_errors"], $smcFunc['db_error']());
-                ShopIndex();
-                return;
-            }
-            // The list of all expiry commands
-            $ecmds = array();
-            while ($row = $smcFunc['db_fetch_assoc']($result)) {
-                array_push($ecmds, $row['expiry_command']);
-            }
-            $smcFunc['db_free_result']($result);
+            // Commit the transaction
+            $smcFunc['db_transaction']('commit');
+            // Mark this transaction as done now.
+            $context["shop_transaction_done"] = true;
 
-            // Put these expiry commands in our orders tables
-            foreach ($ecmds as $ecmd) {
-                $smcFunc['db_insert'](
-                    'replace',
-                    'pp_orders_perks_expiry_commands',
-                    array(
-                        'orders_perks_id' => 'int',
-                        'expiry_command' => 'string',
-                    ),
-                    array(
-                        $orderperkid,
-                        $ecmd,
-                    )
-                ,array('orders_perks_expiry_commands_id'));
-            }
-
-            // finally add the price to the paypal sum
-            $ordersum+=$item['perk_price'];
+            $context['shop_payment_data'] = array(
+                'business' => $context['paypal_email'],
+                'return' => 'http://bangl.de/index.php?action=shop&sa=success',
+                'cancel_return' => 'http://bangl.de/index.php?action=shop&sa=cancel',
+                'notify_url' => 'http://bangl.de/index.php?action=shop&sa=ipn',
+                'item_name' => "Perks",
+                'amount' => $ordersum,
+                'key' => md5(date("Y-m-d:").rand()),
+                'item_number' => $orderid,
+                'rm' => '2',
+                'cmd' => '_xclick',
+                'currency_code' => 'EUR',
+            );
+            ShopIndex();
+        } else {
+            array_push($context["shop_errors"], "You need to be validated to use the perk shop.");
+            ShopIndex();
         }
-
-        // Commit the transaction
-        $smcFunc['db_transaction']('commit');
-        // Mark this transaction as done now.
-        $context["shop_transaction_done"] = true;
-
-        $context['shop_payment_data'] = array(
-            'business' => $context['paypal_email'],
-            'return' => 'http://bangl.de/index.php?action=shop&sa=success',
-            'cancel_return' => 'http://bangl.de/index.php?action=shop&sa=cancel',
-            'notify_url' => 'http://bangl.de/index.php?action=shop&sa=ipn',
-            'item_name' => "Perks",
-            'amount' => $ordersum,
-            'key' => md5(date("Y-m-d:").rand()),
-            'item_number' => $orderid,
-            'rm' => '2',
-            'cmd' => '_xclick',
-            'currency_code' => 'EUR',
-        );
-        ShopIndex();
     }
 }
 
@@ -656,6 +683,7 @@ function ShopCancel() {
     global $context;
     if ($context["user"]["is_logged"]) {
         array_push($context["shop_errors"], "The order was canceled!");
+        // TODO: Remove the cancelled order data
         ShopCart();
     }
 }

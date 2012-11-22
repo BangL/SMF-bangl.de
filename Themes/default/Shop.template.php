@@ -450,8 +450,21 @@ function template_main() {
                             // Show Main Site
                             else {
                                 echo('
-                                <h4>Mainsite</h4>
-                                <div class="shop_index"><div></div></div>
+                                <h4>Welcome to the BangL.de Perk Shop!</h4>
+                                <div class="shop_index">
+                                <div>
+                                <br />
+                                Items and ranks purchased in this Perk Shop are non-refundable.<br />
+                                <br />
+                                Please make sure you have inventory space open to make room for the purchase.<br />
+                                <br />
+                                All money gained from this Perk Shop, is used to keep this server alive.<br />
+                                We use this money to pay for the server as well as save up for a better one!<br />
+                                Without money, we are without server.<br />
+                                <br />
+                                Thank you!<br />
+                                </div>
+                                </div>
                                 ');
                             }
 
