@@ -702,7 +702,7 @@ function ShopIPN() {
         if($order_status == 'Completed' or $order_status == 'Pending') {
             $result = $smcFunc['db_query']('', '
                 UPDATE pp_orders
-                SET paid = {date:paid}
+                SET paid = {string:paid}
                 WHERE order_id = {int:order_id}
             ',array(
                 "paid" => date("Y-m-d H:i:s", $context["shop_thisdate"]),
