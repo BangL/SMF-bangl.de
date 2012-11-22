@@ -1073,7 +1073,7 @@ function db_add_cartitem($member_id, $perk_id, $expiry_length) {
 
     // Add perk to cart
     $smcFunc['db_insert'](
-        'insert',
+        'replace',
         'pp_cartitems',
         array(
             'member_id' => 'int',
@@ -1200,7 +1200,7 @@ function db_add_perk($perk_data) {
 
         // Create a new perk
         $smcFunc['db_insert'](
-            'insert',
+            'replace',
             'pp_perks',
             array(
                 'perk_name' => 'string',
@@ -1222,7 +1222,7 @@ function db_add_perk($perk_data) {
     foreach ($perk_data['perk_commands'] as $cmd) {
         if ($cmd != "") {
             $smcFunc['db_insert'](
-                'insert',
+                'replace',
                 'pp_perk_commands',
                 array(
                     'perk_id' => 'int',
@@ -1240,7 +1240,7 @@ function db_add_perk($perk_data) {
     foreach ($perk_data['perk_expiry_commands'] as $ecmd) {
         if ($ecmd != "") {
             $smcFunc['db_insert'](
-                'insert',
+                'replace',
                 'pp_perk_expiry_commands',
                 array(
                     'perk_id' => 'int',
@@ -1258,7 +1258,7 @@ function db_add_perk($perk_data) {
     foreach ($perk_data['perk_options'] as $option) {
         if ($option["option_expiry_length"] > 0 && $option["option_price"] > 0) {
             $smcFunc['db_insert'](
-                'insert',
+                'replace',
                 'pp_perk_options',
                 array(
                     'perk_id' => 'int',
