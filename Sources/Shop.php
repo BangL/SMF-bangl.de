@@ -670,7 +670,7 @@ function ShopCheckout() {
 function ShopSuccess() {
     global $context;
     if ($context["user"]["is_logged"]) {
-        array_push($context["shop_success"], "Thank you for your purchase.");
+        array_push($context["shop_success"], 'Thank you for your purchase.<br />Remember to use "/perk reload" ingame, or simply relog.');
 
         //Clear cart
         db_clear_cart($context["user"]["id"]);
