@@ -3942,9 +3942,6 @@ function setupMenuContext()
 	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);
 	$context['allow_moderation_center'] = $context['user']['can_mod'];
 	$context['allow_pm'] = allowedTo('pm_read');
-	// ======= edit by BangL start
-	$context['allow_shop'] = !$user_info['is_guest'] && allowedTo('use_shop');
-	// ======= edit by BangL end
 
 	$cacheTime = $modSettings['lastActive'] * 60;
 
@@ -3971,7 +3968,7 @@ function setupMenuContext()
 			'shop' => array(
 				'title' => $txt['shop'],
 				'href' => $scripturl . '?action=shop',
-				'show' => $context['allow_shop'],
+				'show' => allowedTo('use_shop'),
 				'icon' => '',
 			),
 			// ======= edit by BangL end
