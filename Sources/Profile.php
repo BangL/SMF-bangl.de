@@ -356,17 +356,7 @@ function ModifyProfile($post_errors = array())
 
 	// Is there an updated message to show?
 	if (isset($_GET['updated']))
-	{
-		// ======= edit by BangL start
 		$context['profile_updated'] = $txt['profile_updated_own'];
-		if (trim($_GET['updated']) != '')
-		{
-			$context['updated_mcname'] = 
-					sprintf($txt['updated_mcname_own'],
-					trim($_GET['updated']));
-		}
-		// ======= edit by BangL end
-	}
 
 	// Set a few options for the menu.
 	$menuOptions = array(
@@ -627,22 +617,7 @@ function ModifyProfile($post_errors = array())
 					$saveFunc();
 
 			// Let them know it worked!
-			$context['profile_updated'] =
-					$context['user']['is_owner']?
-					$txt['profile_updated_own']:
-					sprintf($txt['profile_updated_else'], $cur_profile['member_name']);
-
-			// ======= edit by BangL start
-			if (isset($context['mc_validate_code']))
-			{
-				$context['minecraft_name_updated'] =
-						$context['user']['is_owner']?
-						sprintf($txt['updated_mcname_own'],
-						$context['mc_validate_code']):
-						sprintf($txt['updated_mcname_else'],
-						$context['mc_validate_code']);
-			}
-			// ======= edit by BangL end
+			$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $cur_profile['member_name']);
 
 			// Invalidate any cached data.
 			cache_put_data('member_data-profile-' . $memID, null, 0);
@@ -657,26 +632,10 @@ function ModifyProfile($post_errors = array())
 			$context['modify_error'][$error_type] = true;
 	}
 	// If it's you then we should redirect upon save.
-	elseif (!empty($profile_vars)
-			&& $context['user']['is_owner'])
-	{
-		// ======= edit by BangL start
-		if (isset($context['mc_validate_code']))
-		{
-			redirectexit('action=profile;area=' . $current_area . ';updated=' . $context['mc_validate_code']);
-		}
-		else
-		{
-			// ======= edit by BangL end
-			redirectexit('action=profile;area=' . $current_area . ';updated');
-			// ======= edit by BangL start
-		}
-		// ======= edit by BangL end
-	}
+	elseif (!empty($profile_vars) && $context['user']['is_owner'])
+		redirectexit('action=profile;area=' . $current_area . ';updated');
 	elseif (!empty($force_redirect))
-	{
 		redirectexit('action=profile' . ($context['user']['is_owner'] ? '' : ';u=' . $memID) . ';area=' . $current_area);
-	}
 
 	// Call the appropriate subaction function.
 	$profile_include_data['function']($memID);
@@ -713,9 +672,7 @@ function loadCustomFields($memID, $area = 'summary')
 			col_name, field_name, field_desc, field_type, field_length, field_options,
 			default_value, bbc, enclose, placement
 		FROM {db_prefix}custom_fields
-		WHERE ' . $where . '
-		OR col_name = "cust_valida0"
-		OR col_name = "cust_valida"',
+		WHERE ' . $where,
 		array(
 			'area' => $area,
 		)
@@ -796,140 +753,18 @@ function loadCustomFields($memID, $area = 'summary')
 				'{INPUT}' => $output_html,
 			));
 
-		// ======= edit by BangL start
-		// Only add to visible data if summary or its not the "validated" flag
-		if ($area == 'summary'
-				|| $row['col_name'] != "cust_valida")
-		{
-			// ======= edit by BangL end
-			$context['custom_fields'][] = array(
-				'name' => $row['field_name'],
-				'desc' => $row['field_desc'],
-				'type' => $row['field_type'],
-				'input_html' => $input_html,
-				'output_html' => $output_html,
-				'placement' => $row['placement'],
-				'colname' => $row['col_name'],
-				'value' => $value,
-			);
-			// ======= edit by BangL start
-		}
-		// ======= edit by BangL end
-
-		// ======= edit by BangL start
-		// Get the validate code, if there is one
-		If ($row['col_name'] == "cust_valida0"
-				&& trim($value) != "")
-		{
-			$context['mc_validate_code'] = $value;
-		}
-
-		// Get Minecraft account name
-		if ($row['col_name'] == "cust_minecr"
-				&& trim($value) != "")
-		{
-			$context['mc_name'] = $value;
-		}
-
-		// Check if validated
-		if ($row['col_name'] == "cust_valida"
-				&& $value == "1")
-		{
-			$context['mc_validated'] = true;
-		}
-		// ======= edit by BangL end
+		$context['custom_fields'][] = array(
+			'name' => $row['field_name'],
+			'desc' => $row['field_desc'],
+			'type' => $row['field_type'],
+			'input_html' => $input_html,
+			'output_html' => $output_html,
+			'placement' => $row['placement'],
+			'colname' => $row['col_name'],
+			'value' => $value,
+		);
 	}
 	$smcFunc['db_free_result']($request);
-
-	// ======= edit by BangL start
-	// Now lets go through all visible data
-	for ($i = 0; $i <= count($context['custom_fields']) - 1; $i++)
-	{
-		// We just wanna "final touch" the code here
-		if ($context['custom_fields'][$i]['colname'] == "cust_valida0")
-		{
-			// Lets generate a code if...
-			// there is none
-			// and there is a minecraft name set
-			// and this account is not validated yet
-			if (trim($context['custom_fields'][$i]['value']) == ""
-					&& isset($context['mc_name'])
-					&& trim($context['mc_name']) != ""
-					&& (!isset($context['mc_validated'])
-					|| !$context['mc_validated']))
-			{
-				// Generate the new validate code
-				$context['mc_validate_code'] = uniqid();
-
-				// and save it
-				$smcFunc['db_insert']('replace',
-					'{db_prefix}themes',
-					array('id_theme' => 'int',
-							'variable' => 'string-255',
-							'value' => 'string-65534',
-							'id_member' => 'int'),
-					array(1, "cust_valida0", $context['mc_validate_code'], $memID),
-					array('id_theme',
-							'variable',
-							'id_member')
-				);
-			}
-			// We totally wanna remove this Code from visible list if this is...
-			// not summary (summary would be read only anyways)
-			// or this is not the owner, and not an admin. (So owners can see their own codes to activate, and admins can see all codes.)
-			// but nobody can ever edit his own code.
-			if ($area != 'summary'
-					|| (!allowedTo('admin_forum')
-					&& $memID != $user_info['id']))
-			{
-				unset($context['custom_fields'][$i]);
-			}
-		}
-		// Lets also remove the validated flag if
-		// the minecraft name is not set
-		if ($context['custom_fields'][$i]['colname'] == "cust_valida"
-				&& (!isset($context['mc_name'])
-				|| trim($context['mc_name']) == ""))
-		{
-			unset($context['custom_fields'][$i]);
-		}
-	}
-	// Change description of "Minecraft Name" 
-	// if not validated yet
-	if (isset($context['mc_validate_code'])
-			&& (!isset($context['mc_validated'])
-			|| !$context['mc_validated']))
-	{
-		// If this is the owner...
-		if ($memID == $user_info['id'])
-		{
-			$context['mc_desciption'] =
-					sprintf($txt['profile_mcname_own']
-							, $context['mc_validate_code']);
-		}
-		// or an admin ...
-		else if (allowedTo('admin_forum'))
-		{
-			$context['mc_desciption'] =
-					sprintf($txt['profile_mcname_else']
-							, $context['mc_validate_code']);
-		}
-		// or anybody else ...
-		else
-		{
-			$context['mc_desciption'] =
-					$txt['profile_mcname_public'];
-		}
-	}
-	else if (isset($context['mc_validated'])
-			&& $context['mc_validated'])
-	{
-		$context['mc_desciption'] = $txt['profile_mcname_validated'];
-	}
-	else
-	{
-		$context['mc_desciption'] = "";
-	}
-	// ======= edit by BangL end
 }
+
 ?>

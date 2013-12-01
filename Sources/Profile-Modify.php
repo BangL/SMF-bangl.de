@@ -1255,21 +1255,16 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 	);
 	$changes = array();
 	$log_changes = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
 		/* This means don't save if:
 			- The user is NOT an admin.
 			- The data is not freely viewable and editable by users.
 			- The data is not invisible to users but editable by the owner (or if it is the user is not the owner)
 			- The area isn't registration, and if it is that the field is not suppossed to be shown there.
 		*/
-		if ($row['private'] != 0
-				&& !allowedTo('admin_forum')
-				&& ($memID != $user_info['id']
-				|| $row['private'] != 2)
-				&& ($area != 'register'
-				|| $row['show_reg'] == 0)) {
+		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($memID != $user_info['id'] || $row['private'] != 2) && ($area != 'register' || $row['show_reg'] == 0))
 			continue;
-		}
 
 		// Validate the user data.
 		if ($row['field_type'] == 'check')
@@ -1278,8 +1273,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 		{
 			$value = $row['default_value'];
 			foreach (explode(',', $row['field_options']) as $k => $v)
-				if (isset($_POST['customfield'][$row['col_name']])
-						&& $_POST['customfield'][$row['col_name']] == $k)
+				if (isset($_POST['customfield'][$row['col_name']]) && $_POST['customfield'][$row['col_name']] == $k)
 					$value = $v;
 		}
 		// Otherwise some form of text!
@@ -1290,8 +1284,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 				$value = $smcFunc['substr']($value, 0, $row['field_length']);
 
 			// Any masks?
-			if ($row['field_type'] == 'text'
-					&& !empty($row['mask']) && $row['mask'] != 'none')
+			if ($row['field_type'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
 			{
 				//!!! We never error on this - just ignore it at the moment...
 				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $value) === 0 || strlen($value) > 255))
@@ -1306,8 +1299,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 		}
 
 		// Did it change?
-		if (!isset($user_profile[$memID]['options'][$row['col_name']])
-				|| $user_profile[$memID]['options'][$row['col_name']] != $value)
+		if (!isset($user_profile[$memID]['options'][$row['col_name']]) || $user_profile[$memID]['options'][$row['col_name']] != $value)
 		{
 			$log_changes[] = array(
 				'action' => 'customfield_' . $row['col_name'],
@@ -1324,115 +1316,15 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 	$smcFunc['db_free_result']($request);
 
 	// Make those changes!
-	if (!empty($changes)
-			&& empty($context['password_auth_failed']))
+	if (!empty($changes) && empty($context['password_auth_failed']))
 	{
-		// ======= edit by BangL start
-
-		for ($i = 0; $i <= count($changes) - 1; $i++)
-		{
-
-			// Is this the Minecraft Name?
-			if ($changes[$i][1] == "cust_minecr")
-			{
-
-				// Get all validated minecraft names in the db
-				// which arent on this forum account (maybe user will change his char cases)
-				$request = $smcFunc['db_query']('', '
-						SELECT b.value
-						FROM {db_prefix}themes AS a
-						JOIN {db_prefix}themes AS b
-						ON a.id_theme = b.id_theme
-						AND a.id_member = b.id_member
-						AND b.variable = "cust_minecr"
-						WHERE a.variable = "cust_valida"
-						AND a.id_theme = 1
-						AND a.value = 1
-						AND a.id_member != {int:member}',
-						array("member" => $memID)
-				);
-				$validatedNames = array();
-				while ($row = $smcFunc['db_fetch_assoc']($request))
-				{
-					$validatedNames[] = strtolower($row['value']);
-				}
-				$smcFunc['db_free_result']($request);
-
-				// clear name if already validated by another member
-				if (in_array(trim(strtolower($changes[$i][2])), $validatedNames))
-				{
-					$changes[$i][2] = "";
-					$post_errors[] = "This Minecraft name is already validated on another forum account.";
-				}
-
-				// Delete validation data
-				// and minecraft name
-				// if name is clear (that means: also if minecraft name was already declared as validated)
-				if (trim($changes[$i][2]) == "")
-				{
-					$smcFunc['db_query']('', '
-							DELETE FROM {db_prefix}themes
-							WHERE id_theme = {int:theme}
-							AND id_member = {int:member}
-							AND (variable = {string:var1}
-							OR variable = {string:var2}
-							OR variable = {string:var3})',
-							array('theme' => 1,
-									'member' => $memID,
-									'var1' => "cust_valida",
-									'var2' => "cust_valida0",
-									'var3' => "cust_minecr")
-					);
-
-					// Dont save this
-					unset($changes[$i]);
-					unset($log_changes[$i]);
-				}
-				// Reset validation data if name was edited/set
-				else
-				{
-					// Set Validated to false
-					$smcFunc['db_insert']('replace',
-						'{db_prefix}themes',
-						array('id_theme' => 'int',
-								'variable' => 'string-255',
-								'value' => 'string-65534',
-								'id_member' => 'int'),
-						array(1, "cust_valida", "0", $memID),
-						array('id_theme',
-								'variable',
-								'id_member')
-					);
-					// Generate a new validate code and save it.
-					$context['mc_validate_code'] = uniqid();
-					$smcFunc['db_insert']('replace',
-						'{db_prefix}themes',
-						array('id_theme' => 'int',
-								'variable' => 'string-255',
-								'value' => 'string-65534',
-								'id_member' => 'int'),
-						array(1, "cust_valida0", $context['mc_validate_code'], $memID),
-						array('id_theme',
-								'variable',
-								'id_member')
-					);
-				}
-			}
-		}
-		// ======= edit by BangL stop
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}themes',
-			array('id_theme' => 'int',
-					'variable' => 'string-255',
-					'value' => 'string-65534',
-					'id_member' => 'int'),
+			array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534', 'id_member' => 'int'),
 			$changes,
-			array('id_theme',
-					'variable',
-					'id_member')
+			array('id_theme', 'variable', 'id_member')
 		);
-		if (!empty($log_changes)
-                && !empty($modSettings['modlog_enabled']))
+		if (!empty($log_changes) && !empty($modSettings['modlog_enabled']))
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_actions',
 				array(

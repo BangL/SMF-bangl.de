@@ -1413,7 +1413,6 @@ function loadAllPermissions($loadType = 'classic')
 			'simple' => array(
 				'view_basic_info',
 				'use_pm_system',
-				'sp',
 				'post_calendar',
 				'edit_profile',
 				'delete_account',
@@ -1424,7 +1423,6 @@ function loadAllPermissions($loadType = 'classic')
 			'classic' => array(
 				'general',
 				'pm',
-				'sp',
 				'calendar',
 				'maintenance',
 				'member_admin',
@@ -1469,15 +1467,6 @@ function loadAllPermissions($loadType = 'classic')
 			'search_posts' => array(false, 'general', 'view_basic_info'),
 			'karma_edit' => array(false, 'general', 'moderate_general'),
 			'pm_read' => array(false, 'pm', 'use_pm_system'),
-			'sp_admin' => array(false, 'sp', 'sp'),
-			'sp_manage_settings' => array(false, 'sp', 'sp'),
-			'sp_manage_blocks' => array(false, 'sp', 'sp'),
-			'sp_manage_articles' => array(false, 'sp', 'sp'),
-			'sp_manage_pages' => array(false, 'sp', 'sp'),
-			'sp_manage_shoutbox' => array(false, 'sp', 'sp'),
-			'sp_add_article' => array(false, 'sp', 'sp'),
-			'sp_auto_article_approval' => array(false, 'sp', 'sp'),
-			'sp_remove_article' => array(false, 'sp', 'sp'),
 			'pm_send' => array(false, 'pm', 'use_pm_system'),
 			'calendar_view' => array(false, 'calendar', 'view_basic_info'),
 			'calendar_post' => array(false, 'calendar', 'post_calendar'),
@@ -1502,9 +1491,6 @@ function loadAllPermissions($loadType = 'classic')
 			'profile_server_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_upload_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),
-			// ======= edit by BangL start
-			'use_shop' => array(false, 'general', 'view_basic_info'),
-			// ======= edit by BangL end
 		),
 		'board' => array(
 			'moderate_board' => array(false, 'general_board', 'moderate'),
@@ -2211,9 +2197,6 @@ function loadIllegalGuestPermissions()
 		'modify_replies',
 		'send_mail',
 		'approve_posts',
-		// ======= edit by BangL start
-		'use_shop',
-		// ======= edit by BangL end
 	);
 }
 

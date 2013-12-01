@@ -302,30 +302,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 			<div id="verification_control_', $i, '" class="verification_control">';
 
 		// Do the actual stuff - image first?
-		if ($i == 0 && ($verify_context['show_visual'] || $modSettings['recaptcha_enabled']))
-		{
-			if ($modSettings['recaptcha_enabled'])
-			{
-				echo '
-				<script type="text/javascript">
-				var RecaptchaOptions = {
-				   theme : \'', empty($modSettings['recaptcha_theme']) ? 'clean' : $modSettings['recaptcha_theme'] , '\',
-				};
-				</script>
-				<script type="text/javascript"
-					src="http://api.recaptcha.net/challenge?k=', $modSettings['recaptcha_public_key'], '">
-				 </script>
-
-				 <noscript>
-					<iframe src="http://api.recaptcha.net/noscript?k=', $modSettings['recaptcha_public_key'], '"
-						height="300" width="500" frameborder="0"></iframe><br />
-					<textarea name="recaptcha_challenge_field" rows="3" cols="40">
-					</textarea>
-					<input type="hidden" name="recaptcha_response_field"
-						value="manual_challenge" />
-				 </noscript>';
-			}
-			else
+		if ($i == 0 && $verify_context['show_visual'])
 		{
 			if ($context['use_graphic_library'])
 				echo '
@@ -349,8 +326,6 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 					', $txt['visual_verification_description'], ':', $display_type != 'quick_reply' ? '<br />' : '', '
 					<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" class="input_text" />
 				</div>';
-
-			}
 		}
 		else
 		{

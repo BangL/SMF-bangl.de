@@ -516,7 +516,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		$reg_errors[] = array('lang', 'username_reserved', 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
-	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $regOptions['email']) === 0 || strlen($regOptions['email']) > 255 || (!empty($modSettings['validateEmail']) && smf_domain_exists($regOptions['email']) === false))
+	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $regOptions['email']) === 0 || strlen($regOptions['email']) > 255)
 		$reg_errors[] = array('done', sprintf($txt['valid_email_needed'], $smcFunc['htmlspecialchars']($regOptions['username'])));
 
 	if (!empty($regOptions['check_reserved_name']) && isReservedName($regOptions['username'], 0, false))
@@ -1387,35 +1387,6 @@ function generateValidationCode()
 	$smcFunc['db_free_result']($request);
 
 	return substr(preg_replace('/\W/', '', sha1(microtime() . mt_rand() . $dbRand . $modSettings['rand_seed'])), 0, 10);
-}
-
-function smf_domain_exists($email, $record = 'MX')
-{
-	list($user,$domain) = split('@',$email);
-
-	$function = (function_exists('checkdnsrr') ? '' : 'smf_') . 'checkdnsrr';
-
-	return $function($domain, $record);
-
-}
-
-function smf_checkdnsrr($host, $type='')
-{
-	if(!empty($host))
-	{
-		if($type == '')
-			$type = "MX";
-		exec("nslookup -type=$type $host", $result);
-		foreach ($result as $line)
-		{
-			if(eregi("^$host",$line))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	return false;
 }
 
 ?>

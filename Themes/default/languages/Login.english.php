@@ -42,9 +42,7 @@ $txt['activate_account'] = 'Account activation';
 $txt['activate_success'] = 'Your account has been successfully activated. You can now proceed to login.';
 $txt['activate_not_completed1'] = 'Your email address needs to be validated before you can login.';
 $txt['activate_not_completed2'] = 'Need another activation email?';
-$txt['activate_after_registration'] = 'Thank you for registering.<br />
-						You will receive an email soon with a link to activate your account.<br />
-						If you don\'t receive an email after some time, check your spam folder.';
+$txt['activate_after_registration'] = 'Thank you for registering. You will receive an email soon with a link to activate your account.  If you don\'t receive an email after some time, check your spam folder.';
 $txt['invalid_userid'] = 'User does not exist';
 $txt['invalid_activation_code'] = 'Invalid activation code';
 $txt['invalid_activation_username'] = 'Username or email';
@@ -74,11 +72,6 @@ $txt['register_agree'] = 'Please read and accept the agreement before registerin
 $txt['register_passwords_differ_js'] = 'The two passwords you entered are not the same!';
 
 $txt['approval_after_registration'] = 'Thank you for registering. The admin must approve your registration before you may begin to use your account, you will receive an email shortly advising you of the admins decision.';
-
-// ======= edit by BangL start
-$txt['minecraft_info_after_registration'] = '<span class="highlight">Use &quot;<span class="meaction"><strong>/av %1$s</strong></span>&quot; on the BangL.de Minecraft server to validate your Minecraft name.</span>';
-$txt['minecraft_name_already_used'] = '<span class="highlight">The Minecraft name you typed in is already validated on another forum account. Please log in and go to Profile -> Account Settings to correct your Minecraft Name after you validated your email address.</span>';
-// ======= edit by BangL end
 
 $txt['admin_settings_desc'] = 'Here you can change a variety of settings related to registration of new members.';
 

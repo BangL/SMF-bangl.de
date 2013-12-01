@@ -220,7 +220,7 @@ function MarkRead()
 		if (isset($_SESSION['topicseen_cache']))
 			$_SESSION['topicseen_cache'] = array();
 
-		redirectexit('action=forum');
+		redirectexit();
 	}
 	elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'unreadreplies')
 	{

@@ -162,14 +162,8 @@ function template_html_above()
 	echo $context['html_headers'];
 
 	echo '
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-</head>';
-    if (isset($context["shop_payment_data"])) {
-        echo "<body onLoad=\"document.forms['paypal_form'].submit();\">\n";
-    } else {
-        echo '<body>';
-    }
+</head>
+<body>';
 }
 
 function template_body_above()
