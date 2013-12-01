@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.4
  */
 
 if (!defined('SMF'))
@@ -248,7 +248,7 @@ function setPassword2()
 	require_once($sourcedir . '/LogInOut.php');
 
 	// Quit if this code is not right.
-	if (empty($_POST['code']) || substr($realCode, 0, 10) != substr(md5($_POST['code']), 0, 10))
+	if (empty($_POST['code']) || substr($realCode, 0, 10) !== substr(md5($_POST['code']), 0, 10))
 	{
 		// Stop brute force attacks like this.
 		validatePasswordFlood($_POST['u'], $flood_value, false);

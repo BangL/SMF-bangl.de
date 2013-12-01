@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.2
+ * @version 2.0.3
  */
 
 if (!defined('SMF'))
@@ -1747,7 +1747,7 @@ function loadPaymentGateways()
 	{
 		while (($file = readdir($dh)) !== false)
 		{
-			if (is_file($sourcedir .'/'. $file) && preg_match('~Subscriptions-([A-Za-z\d]+)\.php~', $file, $matches))
+			if (is_file($sourcedir .'/'. $file) && preg_match('~^Subscriptions-([A-Za-z\d]+)\.php$~', $file, $matches))
 			{
 				// Check this is definitely a valid gateway!
 				$fp = fopen($sourcedir . '/' . $file, 'rb');

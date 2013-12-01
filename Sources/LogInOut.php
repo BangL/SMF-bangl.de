@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.6
  */
 
 if (!defined('SMF'))
@@ -579,6 +579,11 @@ function Logout($internal = false, $redirect = true)
 	// Empty the cookie! (set it in the past, and for id_member = 0)
 	setLoginCookie(-3600, 0);
 
+	// And some other housekeeping while we're at it.
+	session_destroy();
+	if (!empty($user_info['id']))
+		updateMemberData($user_info['id'], array('password_salt' => substr(md5(mt_rand()), 0, 4)));
+
 	// Off to the merry board index we go!
 	if ($redirect)
 	{
@@ -689,12 +694,22 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 	if ($password_flood_value !== false)
 		@list ($time_stamp, $number_tries) = explode('|', $password_flood_value);
 
-	// Timestamp invalid or non-existent?
-	if (empty($number_tries) || $time_stamp < (time() - 10))
+	// Timestamp or number of tries invalid?
+	if (empty($number_tries) || empty($time_stamp))
 	{
-		// If it wasn't *that* long ago, don't give them another five goes.
-		$number_tries = !empty($number_tries) && $time_stamp < (time() - 20) ? 2 : 0;
+		$number_tries = 0;
 		$time_stamp = time();
+	}
+
+	// They've failed logging in already
+	if (!empty($number_tries))
+	{
+		// Give them less chances if they failed before
+		$number_tries = $time_stamp < time() - 20 ? 2 : $number_tries;
+
+		// They are trying too fast, make them wait longer
+		if ($time_stamp < time() - 10)
+			$time_stamp = time();
 	}
 
 	$number_tries++;

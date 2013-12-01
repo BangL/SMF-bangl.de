@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.5
  */
 
 if (!defined('SMF'))
@@ -275,7 +275,10 @@ function MessageMain()
 	);
 
 	if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
+	{
+		$_REQUEST['sa'] = '';
 		MessageFolder();
+	}
 	else
 	{
 		messageIndexBar($_REQUEST['sa']);

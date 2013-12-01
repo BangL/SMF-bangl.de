@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.6
  */
 
 if (!defined('SMF'))
@@ -319,7 +319,6 @@ function ModifyProfile($post_errors = array())
 					'file' => 'Profile-Actions.php',
 					'function' => 'activateAccount',
 					'sc' => 'get',
-					'select' => 'summary',
 					'permission' => array(
 						'own' => array(),
 						'any' => array('moderate_forum'),

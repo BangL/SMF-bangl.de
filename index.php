@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0.2
+ * @version 2.0.6
  */
 
 /*	This, as you have probably guessed, is the crux on which SMF functions.
@@ -22,7 +22,7 @@
 	with the URL index.php?action=action-in-url.  Relatively simple, no?
 */
 
-$forum_version = 'SMF 2.0.2';
+$forum_version = 'SMF 2.0.6';
 
 // Get everything started up...
 define('SMF', 1);
@@ -95,6 +95,15 @@ if (!empty($modSettings['enableCompressedOutput']) && !headers_sent())
 		ob_end_clean();
 		ob_start('ob_gzhandler');
 	}
+}
+
+// Emit some headers for some modicum of protection against nasties.
+if (!headers_sent())
+{
+	// Future versions will make some of this configurable. This is primarily a 'safe' configuration for most cases for now.
+	header('X-Frame-Options: SAMEORIGIN');
+	header('X-XSS-Protection: 1; mode=block');
+	header('X-Content-Type-Options: nosniff');
 }
 
 // Register an error handler.

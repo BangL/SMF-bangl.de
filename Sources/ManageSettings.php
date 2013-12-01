@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.6
  */
 
 if (!defined('SMF'))
@@ -842,7 +842,7 @@ function ModifySpamSettings($return_config = false)
 				$questionInserts,
 				array('id_comment')
 			);
-			$count_questions++;
+			$count_questions += count($questionInserts);
 		}
 
 		if (empty($count_questions) || $_POST['qa_verification_number'] > $count_questions)

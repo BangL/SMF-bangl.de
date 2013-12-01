@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.3
  */
 
 // This won't be dedicated without this - this must exist in each gateway!
@@ -139,12 +139,21 @@ class paypal_payment
 			$requestString .= '&' . $k . '=' . urlencode($v);
 
 		// Can we use curl?
-		if (function_exists('curl_init') && $curl = curl_init('http://www.', !empty($modSettings['paidsubs_test']) ? 'sandbox.' : '', 'paypal.com/cgi-bin/webscr'))
+		if (function_exists('curl_init') && $curl = curl_init((!empty($modSettings['paidsubs_test']) ? 'https://www.sandbox.' : 'http://www.') . 'paypal.com/cgi-bin/webscr'))
 		{
 			// Set the post data.
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDSIZE, 0);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $requestString);
+
+			curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 1);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+				'Host: www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com',
+				'Connection: close'
+			));
 
 			// Fetch the data returned as a string.
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -159,12 +168,17 @@ class paypal_payment
 		else
 		{
 			// Setup the headers.
-			$header = 'POST /cgi-bin/webscr HTTP/1.0' . "\r\n";
+			$header = 'POST /cgi-bin/webscr HTTP/1.1' . "\r\n";
 			$header .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
-			$header .= 'Content-Length: ' . strlen ($requestString) . "\r\n\r\n";
+			$header .= 'Host: www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com' . "\r\n";
+			$header .= 'Content-Length: ' . strlen ($requestString) . "\r\n";
+			$header .= 'Connection: close' . "\r\n\r\n";
 
 			// Open the connection.
-			$fp = fsockopen('www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com', 80, $errno, $errstr, 30);
+			if (!empty($modSettings['paidsubs_test']))
+				$fp = fsockopen('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
+			else
+				$fp = fsockopen('www.paypal.com', 80, $errno, $errstr, 30);
 
 			// Did it work?
 			if (!$fp)
@@ -177,7 +191,7 @@ class paypal_payment
 			while (!feof($fp))
 			{
 				$this->return_data = fgets($fp, 1024);
-				if (strcmp($this->return_data, 'VERIFIED') == 0)
+				if (strcmp(trim($this->return_data), 'VERIFIED') == 0)
 					break;
 			}
 
@@ -187,7 +201,7 @@ class paypal_payment
 
 		// If this isn't verified then give up...
 		// !! This contained a comment "send an email", but we don't appear to send any?
-		if (strcmp($this->return_data, 'VERIFIED') != 0)
+		if (strcmp(trim($this->return_data), 'VERIFIED') != 0)
 			exit;
 
 		// Check that this is intended for us.
@@ -223,7 +237,7 @@ class paypal_payment
 	// Is this a subscription?
 	public function isSubscription()
 	{
-		if (substr($_POST['txn_type'], 0, 14) == 'subscr_payment')
+		if (substr($_POST['txn_type'], 0, 14) == 'subscr_payment' && $_POST['payment_status'] == 'Completed')
 			return true;
 		else
 			return false;
@@ -241,7 +255,7 @@ class paypal_payment
 	// How much was paid?
 	public function getCost()
 	{
-		return $_POST['tax'] + $_POST['mc_gross'];
+		return (isset($_POST['tax']) ? $_POST['tax'] : 0) + $_POST['mc_gross'];
 	}
 
 	// exit.

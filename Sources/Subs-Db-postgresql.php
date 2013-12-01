@@ -8,7 +8,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.4
  */
 
 if (!defined('SMF'))
@@ -94,6 +94,9 @@ function smf_db_replacement__callback($matches)
 	global $db_callback, $user_info, $db_prefix;
 
 	list ($values, $connection) = $db_callback;
+
+	if (!is_resource($connection))
+		db_fatal_error();
 
 	if ($matches[1] === 'db_prefix')
 		return $db_prefix;

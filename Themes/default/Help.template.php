@@ -7,7 +7,7 @@
  * @copyright 2011 Simple Machines
  * @license http://www.simplemachines.org/about/smf/license.php BSD
  *
- * @version 2.0
+ * @version 2.0.6
  */
 
 function template_popup()
@@ -170,7 +170,7 @@ function template_manual()
 	foreach ($context['manual_sections'] as $section_id => $wiki_id)
 	{
 		echo '
-							<li><a href="', $context['wiki_url'], '/', $wiki_id, ($txt['lang_dictionary'] != 'en' ? '/' . $txt['lang_dictionary'] : ''), '" target="_blank" class="new_win">', $txt['manual_section_' . $section_id . '_title'], '</a> - ', $txt['manual_section_' . $section_id . '_desc'], '</li>';
+							<li><a href="', $context['wiki_url'], '/', $wiki_id, ($txt['lang_dictionary'] != 'en' && $txt['lang_dictionary'] != 'english' ? '/' . $txt['lang_dictionary'] : ''), '" target="_blank" class="new_win">', $txt['manual_section_' . $section_id . '_title'], '</a> - ', $txt['manual_section_' . $section_id . '_desc'], '</li>';
 	}
 
 	echo '
