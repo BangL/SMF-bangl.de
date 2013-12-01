@@ -73,6 +73,11 @@ $txt['register_passwords_differ_js'] = 'The two passwords you entered are not th
 
 $txt['approval_after_registration'] = 'Thank you for registering. The admin must approve your registration before you may begin to use your account, you will receive an email shortly advising you of the admins decision.';
 
+// ======= edit by BangL start
+$txt['minecraft_info_after_registration'] = '<span class="highlight">Use &quot;<span class="meaction"><strong>/av %1$s</strong></span>&quot; on the BangL.de Minecraft server to validate your Minecraft name.</span>';
+$txt['minecraft_name_already_used'] = '<span class="highlight">The Minecraft name you typed in is already validated on another forum account. Please log in and go to Profile -> Account Settings to correct your Minecraft Name after you validated your email address.</span>';
+
+// ======= edit by BangL end
 $txt['admin_settings_desc'] = 'Here you can change a variety of settings related to registration of new members.';
 
 $txt['setting_enableOpenID'] = 'Allow users to register using OpenID';
