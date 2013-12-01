@@ -1,7 +1,6 @@
 <?php
 // Version: 2.0; Modifications
 
-<<<<<<< HEAD
 $txt['validateEmail'] = 'Check MX record and validate e-mail';
 
 //reCAPTCHA for SMF
@@ -67,10 +66,8 @@ $txt['txt_reg_links_or'] = 'or';
 
 //END Reg Links Text Strings			
 
-=======
 // ======= edit by BangL start
 //Shop
 $txt['shop'] = 'Perk shop';
 // ======= edit by BangL end
->>>>>>> 0e8d061... full bangl.de patch
 ?>
