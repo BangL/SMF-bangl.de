@@ -523,11 +523,29 @@ function Register2($verifiedOpenID = false)
 	{
 		loadTemplate('Register');
 
+		// ======= edit by BangL start
+		$minecraftText = "<div class=\"windowbg\" id=\"profile_error\">";
+		if (isset($context['mc_validate_code'])) {
+			$minecraftText .= sprintf($txt['minecraft_info_after_registration'], $context['mc_validate_code']);
+		}
+		else
+		{
+			$minecraftText .= $txt['minecraft_name_already_used'];
+		}
+		$minecraftText .= "</div>";
+		// ======= edit by BangL end
 		$context += array(
 			'page_title' => $txt['register'],
 			'title' => $txt['registration_successful'],
 			'sub_template' => 'after',
-			'description' => $modSettings['registration_method'] == 2 ? $txt['approval_after_registration'] : $txt['activate_after_registration']
+			'description' => $modSettings['registration_method'] == 2 ? $txt['approval_after_registration']
+			// ======= edit by BangL start
+			. "<br />" . $minecraftText
+			// ======= edit by BangL end
+			: $txt['activate_after_registration']
+			// ======= edit by BangL start
+			. "<br />" . $minecraftText
+			// ======= edit by BangL end
 		);
 	}
 	else

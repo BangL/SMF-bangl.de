@@ -1318,6 +1318,98 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 	// Make those changes!
 	if (!empty($changes) && empty($context['password_auth_failed']))
 	{
+		// ======= edit by BangL start
+		for ($i = 0; $i <= count($changes) - 1; $i++)
+		{
+
+			// Is this the Minecraft Name?
+			if ($changes[$i][1] == "cust_minecr")
+			{
+
+				// Get all validated minecraft names in the db
+				// which arent on this forum account (maybe user will change his char cases)
+				$request = $smcFunc['db_query']('', '
+						SELECT b.value
+						FROM {db_prefix}themes AS a
+						JOIN {db_prefix}themes AS b
+						ON a.id_theme = b.id_theme
+						AND a.id_member = b.id_member
+						AND b.variable = "cust_minecr"
+						WHERE a.variable = "cust_valida"
+						AND a.id_theme = 1
+						AND a.value = 1
+						AND a.id_member != {int:member}',
+						array("member" => $memID)
+				);
+				$validatedNames = array();
+				while ($row = $smcFunc['db_fetch_assoc']($request))
+				{
+					$validatedNames[] = strtolower($row['value']);
+				}
+				$smcFunc['db_free_result']($request);
+
+				// clear name if already validated by another member
+				if (in_array(trim(strtolower($changes[$i][2])), $validatedNames))
+				{
+					$changes[$i][2] = "";
+					$post_errors[] = "This Minecraft name is already validated on another forum account.";
+				}
+
+				// Delete validation data
+				// and minecraft name
+				// if name is clear (that means: also if minecraft name was already declared as validated)
+				if (trim($changes[$i][2]) == "")
+				{
+					$smcFunc['db_query']('', '
+							DELETE FROM {db_prefix}themes
+							WHERE id_theme = {int:theme}
+							AND id_member = {int:member}
+							AND (variable = {string:var1}
+							OR variable = {string:var2}
+							OR variable = {string:var3})',
+							array('theme' => 1,
+									'member' => $memID,
+									'var1' => "cust_valida",
+									'var2' => "cust_valida0",
+									'var3' => "cust_minecr")
+					);
+
+					// Dont save this
+					unset($changes[$i]);
+					unset($log_changes[$i]);
+				}
+				// Reset validation data if name was edited/set
+				else
+				{
+					// Set Validated to false
+					$smcFunc['db_insert']('replace',
+						'{db_prefix}themes',
+						array('id_theme' => 'int',
+								'variable' => 'string-255',
+								'value' => 'string-65534',
+								'id_member' => 'int'),
+						array(1, "cust_valida", "0", $memID),
+						array('id_theme',
+								'variable',
+								'id_member')
+					);
+					// Generate a new validate code and save it.
+					$context['mc_validate_code'] = uniqid();
+					$smcFunc['db_insert']('replace',
+						'{db_prefix}themes',
+						array('id_theme' => 'int',
+								'variable' => 'string-255',
+								'value' => 'string-65534',
+								'id_member' => 'int'),
+						array(1, "cust_valida0", $context['mc_validate_code'], $memID),
+						array('id_theme',
+								'variable',
+								'id_member')
+					);
+				}
+			}
+		}
+		// ======= edit by BangL stop
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}themes',
 			array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534', 'id_member' => 'int'),

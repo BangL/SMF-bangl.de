@@ -3957,6 +3957,7 @@ function setupMenuContext()
 				),
 				'is_last' => $context['right_to_left'],
 			),
+<<<<<<< HEAD
 			'forum' => array(
 				'title' => empty($txt['sp-forum']) ? 'Forum' : $txt['sp-forum'],
 				'href' => $scripturl . ($modSettings['sp_portal_mode'] == 1 && empty($context['disable_sp']) ? '?action=forum' : ''),
@@ -3964,6 +3965,16 @@ function setupMenuContext()
 				'sub_buttons' => array(
 				),
 			),
+=======
+			// ======= edit by BangL start
+			'shop' => array(
+				'title' => $txt['shop'],
+				'href' => $scripturl . '?action=shop',
+				'show' => allowedTo('use_shop'),
+				'icon' => '',
+			),
+			// ======= edit by BangL end
+>>>>>>> 0e8d061... full bangl.de patch
 			'help' => array(
 				'title' => $txt['help'],
 				'href' => $scripturl . '?action=help',

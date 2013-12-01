@@ -280,6 +280,9 @@ function smf_main()
 		'deletemsg' => array('RemoveTopic.php', 'DeleteMessage'),
 		'display' => array('Display.php', 'Display'),
 		'dlattach' => array('Display.php', 'Download'),
+		// ======= edit by BangL start
+		'shop' => array('Shop.php', 'Shop'),
+		// ======= edit by BangL end
 		'editpoll' => array('Poll.php', 'EditPoll'),
 		'editpoll2' => array('Poll.php', 'EditPoll2'),
 		'emailuser' => array('SendTopic.php', 'EmailUser'),

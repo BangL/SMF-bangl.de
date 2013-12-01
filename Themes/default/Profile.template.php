@@ -30,6 +30,15 @@ function template_profile_above()
 		echo '
 					', template_error_message();
 
+	// ======= edit by BangL start
+	// If the Minecraft Name was changed show the validation code message.
+	if (!empty($context['updated_mcname']))
+		echo '
+					<div class="windowbg" id="profile_error">
+						', $context['updated_mcname'], '
+					</div>';
+
+	// ======= edit by BangL end
 	// If the profile was update successfully, let the user know this.
 	if (!empty($context['profile_updated']))
 		echo '
@@ -1279,7 +1288,18 @@ function template_edit_options()
 			echo '
 						<dt>
 							<strong>', $field['name'], ': </strong><br />
-							<span class="smalltext">', $field['desc'], '</span>
+							<span class="smalltext">' // ======= edit by BangL start ====== , $field['desc'], '</span>
+							;
+							if ($field['colname'] != "cust_minecr") {
+								echo '
+										' . $field['desc'];
+							} else {
+								echo '
+										' . $context['mc_desciption'];
+							}
+							// ======= edit by BangL end: (on </span>, 2 lines below)
+							echo '
+									</span>
 						</dt>
 						<dd>
 							', $field['input_html'], '

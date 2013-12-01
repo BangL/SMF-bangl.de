@@ -165,7 +165,13 @@ function template_html_above()
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
-<body>';
+'; // ======= edit by BangL start ====== <body>';
+    if (isset($context["shop_payment_data"])) {
+        echo "<body onLoad=\"document.forms['paypal_form'].submit();\">\n";
+    } else {
+        echo '<body>';
+    }
+// ======= edit by BangL end
 }
 
 function template_body_above()

@@ -1502,6 +1502,9 @@ function loadAllPermissions($loadType = 'classic')
 			'profile_server_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_upload_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),
+			// ======= edit by BangL start
+			'use_shop' => array(false, 'general', 'view_basic_info'),
+			// ======= edit by BangL end
 		),
 		'board' => array(
 			'moderate_board' => array(false, 'general_board', 'moderate'),
@@ -2208,6 +2211,9 @@ function loadIllegalGuestPermissions()
 		'modify_replies',
 		'send_mail',
 		'approve_posts',
+		// ======= edit by BangL start
+		'use_shop',
+		// ======= edit by BangL end
 	);
 }
 
