@@ -357,18 +357,7 @@ $txt['request_group_membership'] = 'Request Group Membership';
 $txt['request_group_membership_desc'] = 'Before you can join this group your membership must be approved by the moderator. Please give a reason for joining this group';
 $txt['submit_request'] = 'Submit Request';
 
-// ======= edit by BangL start
-$txt['profile_mcname_own'] = '<span class="meaction">Not validated. Use &quot;<strong>/av %1$s</strong>&quot; on the BangL.de Minecraft server.</span>';
-$txt['profile_mcname_else'] = '<span class="meaction">Not validated. Tell this member to use &quot;<strong>/av %1$s</strong>&quot; on the BangL.de Minecraft server.</span>';
-$txt['profile_mcname_public'] = '<span class="meaction">Not validated</span>';
-$txt['profile_mcname_validated'] = '<span style="color: green;">Validated</span>';
-
-$txt['updated_mcname_own'] = '<span class="highlight">Use &quot;<span class="meaction"><strong>/av %1$s</strong></span>&quot; on the BangL.de Minecraft Server to validate your Minecraft name!</span>';
-$txt['updated_mcname_else'] = '<span class="highlight">Tell him/her to use &quot;<span class="meaction"><strong>/av %1$s</strong></span>&quot; on the BangL.de Minecraft server to validate his/her Minecraft name!</span>';
-
-$txt['profile_updated_own'] = 'Your profile has been updated successfully.<br />If "Minecraft Name" keeps clear after you set it, it means the name you typed in is already validated on another forum account.';
-//$txt['profile_updated_own'] = 'Your profile has been updated successfully.';
-// ======= edit by BangL end
+$txt['profile_updated_own'] = 'Your profile has been updated successfully.';
 $txt['profile_updated_else'] = 'The profile for %1$s has been updated successfully.';
 
 $txt['profile_error_signature_max_length'] = 'Your signature cannot be greater than %1$d characters';

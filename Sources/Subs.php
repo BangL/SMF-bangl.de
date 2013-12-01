@@ -3898,14 +3898,6 @@ function setupMenuContext()
 				),
 				'is_last' => $context['right_to_left'],
 			),
-			// ======= edit by BangL start
-			'shop' => array(
-				'title' => $txt['shop'],
-				'href' => $scripturl . '?action=shop',
-				'show' => allowedTo('use_shop'),
-				'icon' => '',
-			),
-			// ======= edit by BangL end
 			'help' => array(
 				'title' => $txt['help'],
 				'href' => $scripturl . '?action=help',
