@@ -131,6 +131,7 @@ function AdminMain()
 						'layout' => array($txt['mods_cat_layout']),
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
 						'sig' => array($txt['signature_settings_short']),
+						'action' => array($txt['custom_action_shorttitle'], 'admin_forum'),
 						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
 					),
 				),
@@ -282,6 +283,77 @@ function AdminMain()
 						'attachments' => array($txt['attachment_manager_settings']),
 						'avatars' => array($txt['attachment_manager_avatar_settings']),
 						'maintenance' => array($txt['attachment_manager_maintenance']),
+					),
+				),
+			),
+		),
+		'portal' => array(
+			'title' => $txt['sp-adminCatTitle'],
+			'permission' => array('sp_admin', 'sp_manage_settings', 'sp_manage_blocks', 'sp_manage_articles', 'sp_manage_pages', 'sp_manage_shoutbox'),
+			'areas' => array(
+				'portalconfig' => array(
+					'label' => $txt['sp-adminConfiguration'],
+					'file' => 'PortalAdminMain.php',
+					'function' => 'sportal_admin_config_main',
+					'icon' => 'configuration.png',
+					'permission' => array('sp_admin', 'sp_manage_settings'),
+					'subsections' => array(
+						'information' => array($txt['sp-info_title']),
+						'generalsettings' => array($txt['sp-adminGeneralSettingsName']),
+						'blocksettings' => array($txt['sp-adminBlockSettingsName']),
+						'articlesettings' => array($txt['sp-adminArticleSettingsName']),
+					),
+				),
+				'portalblocks' => array(
+					'label' => $txt['sp-blocksBlocks'],
+					'file' => 'PortalAdminBlocks.php',
+					'function' => 'sportal_admin_blocks_main',
+					'icon' => 'blocks.png',
+					'permission' => array('sp_admin', 'sp_manage_blocks'),
+					'subsections' => array(
+						'list' => array($txt['sp-adminBlockListName']),
+						'add' => array($txt['sp-adminBlockAddName']),
+						'header' => array($txt['sp-positionHeader']),
+						'left' => array($txt['sp-positionLeft']),
+						'top' => array($txt['sp-positionTop']),
+						'bottom' => array($txt['sp-positionBottom']),
+						'right' => array($txt['sp-positionRight']),
+						'footer' => array($txt['sp-positionFooter']),
+					),
+				),
+				'portalarticles' => array(
+					'label' => $txt['sp-adminColumnArticles'],
+					'file' => 'PortalAdminArticles.php',
+					'function' => 'sportal_admin_articles_main',
+					'icon' => 'articles.png',
+					'permission' => array('sp_admin', 'sp_manage_articles'),
+					'subsections' => array(
+						'articles' => array($txt['sp-adminArticleListName']),
+						'addarticle' => array($txt['sp-adminArticleAddName']),
+						'categories' => array($txt['sp-adminCategoryListName']),
+						'addcategory' => array($txt['sp-adminCategoryAddName']),
+					),
+				),
+				'portalpages' => array(
+					'label' => $txt['sp_admin_pages_title'],
+					'file' => 'PortalAdminPages.php',
+					'function' => 'sportal_admin_pages_main',
+					'icon' => 'pages.png',
+					'permission' => array('sp_admin', 'sp_manage_pages'),
+					'subsections' => array(
+						'list' => array($txt['sp_admin_pages_list']),
+						'add' => array($txt['sp_admin_pages_add']),
+					),
+				),
+				'portalshoutbox' => array(
+					'label' => $txt['sp_admin_shoutbox_title'],
+					'file' => 'PortalAdminShoutbox.php',
+					'function' => 'sportal_admin_shoutbox_main',
+					'icon' => 'shoutbox.png',
+					'permission' => array('sp_admin', 'sp_manage_shoutbox'),
+					'subsections' => array(
+						'list' => array($txt['sp_admin_shoutbox_list']),
+						'add' => array($txt['sp_admin_shoutbox_add']),
 					),
 				),
 			),
@@ -720,7 +792,7 @@ function AdminSearchInternal()
 	// All the files we need to include.
 	$include_files = array(
 		'ManageSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePaid', 'ManagePermissions',
-		'ManagePosts', 'ManageRegistration', 'ManageSearch', 'ManageSearchEngines', 'ManageServer', 'ManageSmileys',
+		'ManagePosts', 'ManageRegistration', 'ManageSearch', 'ManageSearchEngines', 'ManageServer', 'ManageSmileys', 'PortalAdminMain',
 	);
 	foreach ($include_files as $file)
 		require_once($sourcedir . '/' . $file . '.php');
@@ -790,6 +862,13 @@ function AdminSearchInternal()
 		array('ModifySubscriptionSettings', 'area=paidsubscribe;sa=settings'),
 		array('ModifyPruningSettings', 'area=logs;sa=pruning'),
 	);
+
+	// We are more than "real freaking good" Grudge. ;P
+	$settings_search = array_merge($settings_search, array(
+		array('sportal_admin_general_settings', 'area=portalconfig;sa=generalsettings'),
+		array('sportal_admin_block_settings', 'area=portalconfig;sa=blocksettings'),
+		array('sportal_admin_article_settings', 'area=portalconfig;sa=articlesettings'),
+	));
 
 	foreach ($settings_search as $setting_area)
 	{

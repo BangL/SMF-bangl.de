@@ -1486,6 +1486,13 @@ function template_profile_theme_settings()
 								<label for="show_no_signatures"><input type="checkbox" name="default_options[show_no_signatures]" id="show_no_signatures" value="1"', !empty($context['member']['options']['show_no_signatures']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['show_no_signatures'], '</label>
 							</li>';
 
+	if (allowedto('FBSlideLikeBox_display') && !empty($modSettings['fb_slide_box_enable']) && !empty($modSettings['fb_slide_box_url']))
+		echo'
+							<li>
+								<input type="hidden" name="default_options[fb_slide_box_user]" value="0" />
+								<label for="fb_slide_box_user"><input type="checkbox" name="default_options[fb_slide_box_user]" id="fb_slide_box_user" value="1"', !empty($context['member']['options']['fb_slide_box_user']) ? ' checked="checked"' : '', ' class="input_check" />', $txt['fb_slide_box_user'] ,'</label>
+							</li>';
+
 	if ($settings['allow_no_censored'])
 		echo '
 							<li>

@@ -168,6 +168,8 @@ function template_html_above()
 	echo $context['html_headers'];
 
 	echo '
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>';
 }

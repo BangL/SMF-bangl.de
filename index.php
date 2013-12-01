@@ -52,6 +52,7 @@ require_once($sourcedir . '/Subs.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
+require_once($sourcedir . '/Subs-Portal.php');
 
 // Using an pre-PHP 5.1 version?
 if (@version_compare(PHP_VERSION, '5.1') == -1)
@@ -203,10 +204,17 @@ function smf_main()
 		// Log this user as online.
 		writeLog();
 
-		// Track forum statistics and hits...?
-		if (!empty($modSettings['hitStats']))
-			trackStats(array('hits' => '+'));
+		// Don't track stats of portal xml actions.
+		if (empty($_REQUEST['action']) || $_REQUEST['action'] != 'portal' || !isset($_GET['xml']))
+		{
+			// Track forum statistics and hits...?
+			if (!empty($modSettings['hitStats']))
+				trackStats(array('hits' => '+'));
+		}
 	}
+
+	// Load SimplePortal.
+	sportal_init();
 
 	// Is the forum in maintenance mode? (doesn't apply to administrators.)
 	if (!empty($maintenance) && !allowedTo('admin_forum'))
@@ -232,6 +240,11 @@ function smf_main()
 	}
 	elseif (empty($_REQUEST['action']))
 	{
+		// Go catch it boy! Catch it!
+		$sp_action = sportal_catch_action();
+		if ($sp_action)
+			return $sp_action;
+
 		// Action and board are both empty... BoardIndex!
 		if (empty($board) && empty($topic))
 		{
@@ -271,6 +284,8 @@ function smf_main()
 		'editpoll2' => array('Poll.php', 'EditPoll2'),
 		'emailuser' => array('SendTopic.php', 'EmailUser'),
 		'findmember' => array('Subs-Auth.php', 'JSMembers'),
+		'forum' => array('BoardIndex.php', 'BoardIndex'),
+		'portal' => array('PortalMain.php', 'sportal_main'),
 		'groups' => array('Groups.php', 'Groups'),
 		'help' => array('Help.php', 'ShowHelp'),
 		'helpadmin' => array('Help.php', 'ShowAdminHelp'),
@@ -338,6 +353,14 @@ function smf_main()
 
 	// Allow modifying $actionArray easily.
 	call_integration_hook('integrate_actions', array(&$actionArray));
+
+	if (!empty($context['disable_sp']))
+		unset($actionArray['portal'], $actionArray['forum']);
+
+	// Add custom actions to the array.
+	$custom_actions = explode(';', $modSettings['ca_cache']);
+	foreach ($custom_actions as $custom_action)
+		$actionArray[$custom_action] = array('CustomAction.php', 'ViewCustomAction');
 
 	// Get the function and file to include - if it's not there, do the board index.
 	if (!isset($_REQUEST['action']) || !isset($actionArray[$_REQUEST['action']]))

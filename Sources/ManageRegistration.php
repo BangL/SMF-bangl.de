@@ -273,6 +273,7 @@ function ModifyRegistrationSettings($return_config = false)
 			array('check', 'enableOpenID'),
 			array('check', 'notify_new_registration'),
 			array('check', 'send_welcomeEmail'),
+			array('check', 'validateEmail'),
 		'',
 			array('int', 'coppaAge', 'subtext' => $txt['setting_coppaAge_desc'], 'onchange' => 'checkCoppa();'),
 			array('select', 'coppaType', array($txt['setting_coppaType_reject'], $txt['setting_coppaType_approval']), 'onchange' => 'checkCoppa();'),

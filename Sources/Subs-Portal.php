@@ -257,7 +257,7 @@ function sportal_init_headers()
 
 	$context['html_headers'] .= '
 	<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/portal.js?235"></script>
-	<script type="text/javascript"><!-- // --><![CDATA[
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var sp_images_url = "' . $settings['sp_images_url'] . '";
 		function sp_collapseBlock(id)
 		{

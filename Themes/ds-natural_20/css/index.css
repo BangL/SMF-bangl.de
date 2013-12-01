@@ -3701,3 +3701,10 @@ ul#topnav {
 {
 	margin: 0 auto !important;
 }
+
+/* Make the reCAPTCHA dialog centered to match the positioning of the built-in verification */
+.centertext #recaptcha_table
+{
+	margin: 0 auto !important;
+}
+
