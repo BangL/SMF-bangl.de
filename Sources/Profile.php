@@ -838,7 +838,7 @@ function loadCustomFields($memID, $area = 'summary')
 	$smcFunc['db_free_result']($request);
 	// ======= edit by BangL start
 	// Now lets go through all visible data
-	for ($i = 0; $i <= count($context['custom_fields']) - 1; $i++)
+	for ($i = 0; $i <= (count($context['custom_fields']) - 1); $i++)
 	{
 		// We just wanna "final touch" the code here
 		if ($context['custom_fields'][$i]['colname'] == "cust_valida0")
@@ -853,6 +853,7 @@ function loadCustomFields($memID, $area = 'summary')
 					&& (!isset($context['mc_validated'])
 					|| !$context['mc_validated']))
 			{
+				echo("generated a new code");
 				// Generate the new validate code
 				$context['mc_validate_code'] = uniqid();
 
@@ -882,7 +883,8 @@ function loadCustomFields($memID, $area = 'summary')
 		}
 		// Lets also remove the validated flag if
 		// the minecraft name is not set
-		if ($context['custom_fields'][$i]['colname'] == "cust_valida"
+		if (isset($context['custom_fields'][$i])
+				&& $context['custom_fields'][$i]['colname'] == "cust_valida"
 				&& (!isset($context['mc_name'])
 				|| trim($context['mc_name']) == ""))
 		{

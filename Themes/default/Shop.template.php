@@ -15,7 +15,7 @@ function template_main() {
             <ul class="dropmenu" id="dropdown_menu_1">
                 <li>
                     <a class="firstlevel'); if ($context["shop_sa"] == "index") echo(' active'); echo('" href="index.php?action=shop">
-                        <span class="firstlevel">Main</span>
+                        <span class="firstlevel">Shop</span>
                     </a>
                 </li>
                 ');
@@ -24,7 +24,7 @@ function template_main() {
                     echo('
                     <li>
                         <a class="firstlevel'); if (!empty($context["shop_cart_items"])) echo(' active'); echo('" href="index.php?action=shop&sa=cart">
-                            <span class="firstlevel">View Cart</span>
+                            <span class="firstlevel">Warenkorb</span>
                         </a>
                     </li>
                     ');
@@ -33,8 +33,13 @@ function template_main() {
                 if ($context["user"]["is_admin"]) {
                     echo('
                     <li>
+                        <a class="firstlevel'); if($context["shop_sa"] == "addcat") echo(' active'); echo('" href="index.php?action=shop&sa=addcat">
+                            <span class="firstlevel">Kategorie erstellen</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="firstlevel'); if($context["shop_sa"] == "addperk") echo(' active'); echo('" href="index.php?action=shop&sa=addperk">
-                            <span class="firstlevel">Add Perk</span>
+                            <span class="firstlevel">Perk erstellen</span>
                         </a>
                     </li>
                     ');
@@ -59,13 +64,18 @@ function template_main() {
                         // Show a little cart overview
                         if ($context["shop_cart_count"]) {
                             echo('
-                            <h4><a href="index.php?action=shop&sa=cart">Perk cart</a></h4>
-                            <div class="shop_cart reset smalltext">
-                                ' . $context["shop_cart_count"] . ' perks in cart (' . number_format($context["shop_cart_sum"], 2) . ' EUR).
-                                <form action="index.php" method="get">
+                            <h4><a href="index.php?action=shop&sa=cart">Warenkorb</a></h4>
+                            <div class="shop_cart reset smalltext">' . $context["shop_cart_count"] . ' ');
+							if ($context["shop_cart_count"] == 1) {
+								echo('Perk<br />');
+							} else {
+								echo('Perks<br />');
+							}
+							echo(number_format($context["shop_cart_sum"], 2, ",", ".") . ' EUR.
+								<form action="index.php" method="get">
                                     <input type=hidden name="action" value="shop">
                                     <input type=hidden name="sa" value="checkout">
-                                    <input type=submit value="Buy!">
+                                    <input type=submit value="Spenden!">
                                 </form>
                             </div>
                             <hr />
@@ -74,7 +84,7 @@ function template_main() {
                         // List availible perks
                         foreach ($context["shop_prices"] as $price) {
                             echo('
-                            <h4>' . number_format($price, 2) . ' EUR Perks</h4>
+                            <h4>' . number_format($price, 2, ",", ".") . ' EUR Perks</h4>
                             <ul class="shop_price reset smalltext">
                                 ');
                                 foreach ($context["shop_perks"] as $perk) {
@@ -92,7 +102,7 @@ function template_main() {
                                             echo('
                                             <li>
                                                 <a href="index.php?action=shop&sa=perk&perk_id=' . $perk["perk_id"] . '&len=' . $option["option_expiry_length"] . '">
-                                                    ' . $perk["perk_name"] . ' (' . $option["option_expiry_length"] . ' days)
+                                                    ' . $perk["perk_name"] . ' (' . $option["option_expiry_length"] . ' Tage)
                                                 </a>
                                             </li>
                                             ');
@@ -143,13 +153,13 @@ function template_main() {
                             if ($context["shop_sa"] == "cart"
                                     && !empty($context["shop_cart_items"])) {
                                 $tablestart='
-                                <h4>Perk cart</h4>
+                                <h4>Warenkorb</h4>
                                 <div class="shop_cart_view">
                                     <div>
                                         <table class="cart">
                                             <tr>
                                                 <th>Perk</th>
-                                                <th>Donation</th>
+                                                <th>Spende</th>
                                             </tr>
                                             ';
                                             $sum=0;
@@ -162,21 +172,21 @@ function template_main() {
                                                     <td>
                                                         ' . $item['perk_name'];
                                                         if ($item['expiry_length'] > 0) {
-                                                            $tablecontent=$tablecontent.' (<a href="index.php?action=shop&sa=perk&perk_id=' . $item['perk_id'] . '&len=' . $item['expiry_length'] . '">' . $item['expiry_length'] . ' days</a>)';
+                                                            $tablecontent=$tablecontent.' (<a href="index.php?action=shop&sa=perk&perk_id=' . $item['perk_id'] . '&len=' . $item['expiry_length'] . '">' . $item['expiry_length'] . ' Tage</a>)';
                                                         } elseif ($item['has_options']) {
-                                                            $tablecontent=$tablecontent.' (<a href="index.php?action=shop&sa=perk&perk_id=' . $item['perk_id'] . '">Perk</a>)';
+                                                            $tablecontent=$tablecontent.' (<a href="index.php?action=shop&sa=perk&perk_id=' . $item['perk_id'] . '">Lifetime</a>)';
                                                         }
                                                         $tablecontent=$tablecontent.'
-                                                        <a class="righttext" href="index.php?action=shop&sa=cartitemremove&perk_id=' . $item['perk_id'] . '">Remove</a>
+                                                        <a class="righttext" href="index.php?action=shop&sa=cartitemremove&perk_id=' . $item['perk_id'] . '">Entfernen</a>
                                                     </td>
-                                                    <td>' . number_format($item['perk_price'], 2) . ' EUR</td>
+                                                    <td>' . number_format($item['perk_price'], 2, ",", ".") . ' EUR</td>
                                                 </tr>
                                                 ';
                                             }
                                             $tableend='
                                             <tr>
-                                                <td><span class="shop_bold">SUM</span></td>
-                                                <td><span class="shop_bold">' . number_format($sum, 2) . ' EUR</span></td>
+                                                <td><span class="shop_bold">Summe</span></td>
+                                                <td><span class="shop_bold">' . number_format($sum, 2, ",", ".") . ' EUR</span></td>
                                             </tr>
                                         </table>
                                         <hr />
@@ -184,7 +194,7 @@ function template_main() {
                                             <input type=hidden name="action" value="shop">
                                             <input type=hidden name="sa" value="checkout">
                                             <p class="righttext">
-                                                <input type=submit value="Buy!" class="button_submit">
+                                                <input type=submit value="Spende senden!" class="button_submit">
                                             </p>
                                         </form>
                                     </div>
@@ -207,7 +217,7 @@ function template_main() {
                                         <div>
                                             <p class="perk_details_left">
                                                 <div class="post">
-                                                    <span class="shop_bold">Description:</span>
+                                                    <span class="shop_bold">Beschreibung:</span>
                                                     <p>
                                                     ' . stripslashes(preg_replace('/\\\[rn]/', '<br />', htmlspecialchars(un_htmlspecialchars($context["shop_perk_details"]['perk_desc'])))) . '
                                                     </p>
@@ -217,7 +227,7 @@ function template_main() {
                                             if (!empty($context["shop_perk_details"]['perk_options'])) {
                                                 echo('
                                                 <p class="perk_details_right lifetime">
-                                                    <span class="shop_bold">Lifetime:</span>
+                                                    <span class="shop_bold">Dauer:</span>
                                                     <br />
                                                     <select name="len" id="select_expiry_length" onchange="updatePrice()" style="display: none;">
                                                         ');
@@ -228,13 +238,13 @@ function template_main() {
                                                                     $selected = true;
                                                                     $price = $perk_option["option_price"];
                                                                 } echo('>
-                                                                    ' . $perk_option['option_expiry_length'] . ' days
+                                                                    ' . $perk_option['option_expiry_length'] . ' Tage
                                                                 </option>
                                                             ');
                                                         }
                                                         if ($context["shop_perk_details"]['perk_price'] > 0) {
                                                             echo('
-                                                            <option value="0"'); if (!$selected) echo('selected="selected"'); echo('>Perk</option>
+                                                            <option value="0"'); if (!$selected) echo('selected="selected"'); echo('>Lifetime</option>
                                                             ');
                                                         }
                                                         echo('
@@ -244,7 +254,7 @@ function template_main() {
                                             }
                                             echo('
                                             <p class="perk_details_right">
-                                                <span class="shop_bold">Price:</span><br />
+                                                <span class="shop_bold">Spende:</span><br />
                                                 ');
                                                 if (isset($selected) && $selected) {
                                                     $price_val = $price;
@@ -252,18 +262,18 @@ function template_main() {
                                                     $price_val = $context["shop_perk_details"]["perk_price"];
                                                 }
                                                 echo('
-                                                <span class="perk_price" id="perk_price">' . number_format($price_val, 2) . '</span><span class="perk_price"> EUR</span>
+                                                <span class="perk_price" id="perk_price">' . number_format($price_val, 2, ",", ".") . '</span><span class="perk_price"> EUR</span>
                                             </p>
                                             <hr class="clearfix" />
                                             <input type=hidden name="perk_id" value="' . $context["shop_perk_details"]['perk_id'] . '" />
                                             <p class="righttext">
-                                                <input type=submit value="Add to cart" class="button_submit" />
+                                                <input type=submit value="In den Warenkorb" class="button_submit" />
                                             </p>
                                             ');
                                             if ($context["user"]["is_admin"]) {
                                                 echo('
                                                 <div>
-                                                    <a href="index.php?action=shop&sa=editperk&perk_id=' . $context["shop_perk_details"]['perk_id'] . '">Edit</a>
+                                                    <a href="index.php?action=shop&sa=editperk&perk_id=' . $context["shop_perk_details"]['perk_id'] . '">Bearbeiten</a>
                                                 </div>
                                                 ');
                                             }
@@ -314,13 +324,13 @@ function template_main() {
                                                 echo('<input type="hidden" name="perk_id" value="' . $context["shop_perk_details"]["perk_id"] . '" />');
                                             }
                                             echo('
-                                            <h4>Edit Perk</h4>
+                                            <h4>Perk bearbeiten</h4>
                                             <div class="perk_name">
                                                 <div><label for="perk_name">Name</label></div>
                                                 <div>
                                                     <input class="text" type="text" name="perk_name" value="'); if (isset($context["shop_perk_details"]["perk_id"])) echo(htmlspecialchars(stripslashes(un_htmlspecialchars($context["shop_perk_details"]["perk_name"])))); echo('" />
                                                 </div>
-                                                <div><label for="perk_description">Description</label></div>
+                                                <div><label for="perk_description">Beschreibung</label></div>
                                                 <div>
                                                     <textarea name="perk_description">');
                                                     if (isset($context["shop_perk_details"]["perk_id"])) {
@@ -332,7 +342,7 @@ function template_main() {
                                             <div class="perk_command_wrapper">
                                                 <div id="perk_commands">
                                                     <div>
-                                                        <label for="perk_command_1">Commands</label>
+                                                        <label for="perk_command_1">Befehle</label>
                                                         <img src="/Themes/default/images/shop/plus_button.png" id="command_add">
                                                     </div>
                                                     ');
@@ -355,7 +365,7 @@ function template_main() {
                                                 </div>
                                                 <div id="perk_expiry_commands">
                                                     <div>
-                                                        <label for="perk_expiry_command_1">Expiry Commands</label>
+                                                        <label for="perk_expiry_command_1">Befehle bei Ablauf der Zeit</label>
                                                         <img src="/Themes/default/images/shop/plus_button.png" id="expiry_command_add">
                                                     </div>
                                                     ');
@@ -376,17 +386,17 @@ function template_main() {
                                             <div class="perk_settings">
                                                 <div class="perk_setting">
                                                     <div>
-                                                        <label for="perk_price">Price (EUR)</label>
+                                                        <label for="perk_price">Preis (EUR)</label>
                                                         <img src="/Themes/default/images/shop/plus_button.png" id="perk_options_add">
                                                     </div>
                                                     <div id="perk_option_price">
                                                         ');
                                                         $counter=1;
-                                                        echo('<input class="text" type="text" name="perk_price_' . $counter . '" value="'); if (isset($context["shop_perk_details"]["perk_id"])) echo(number_format($context["shop_perk_details"]["perk_price"], 2)); echo('" />');
+                                                        echo('<input class="text" type="text" name="perk_price_' . $counter . '" value="'); if (isset($context["shop_perk_details"]["perk_id"])) echo(number_format($context["shop_perk_details"]["perk_price"], 2, ",", ".")); echo('" />');
                                                         if (isset($context["shop_perk_details"]["perk_options"])) {
                                                             foreach ($context["shop_perk_details"]["perk_options"] as $option) {
                                                                 $counter+=1;
-                                                                echo('<input class="text" type="text" name="perk_price_' . $counter . '" value="' . number_format($option["option_price"], 2) .'" />');
+                                                                echo('<input class="text" type="text" name="perk_price_' . $counter . '" value="' . number_format($option["option_price"], 2, ",", ".") .'" />');
                                                             }
                                                         }
                                                         while ($counter < $context["shop_perk_details"]["perk_option_count"]) {
@@ -398,7 +408,7 @@ function template_main() {
                                                 </div>
                                                 <div class="perk_setting">
                                                     <div>
-                                                        <label for="perk_expiry_length">Expiry Length</label>
+                                                        <label for="perk_expiry_length">Ablaufzeit</label>
                                                     </div>
                                                     <div id="perk_option_length">
                                                         ');
@@ -418,11 +428,11 @@ function template_main() {
                                                     </div>
                                                 </div>
                                                 <div class="perk_setting">
-                                                    <div><label for="perk_require_online">Require Online</label></div>
+                                                    <div><label for="perk_require_online">Erfordert Online-Status</label></div>
                                                     <div>
                                                         <select name="perk_require_online">
-                                                            <option value="1"'); if (isset($context["shop_perk_details"]["require_online"]) && $context["shop_perk_details"]["require_online"]) echo' selected="selected"'; echo('>Yes</option>
-                                                            <option value="0"'); if (isset($context["shop_perk_details"]["require_online"]) && !$context["shop_perk_details"]["require_online"]) echo' selected="selected"'; echo('>No</option>
+                                                            <option value="1"'); if (isset($context["shop_perk_details"]["require_online"]) && $context["shop_perk_details"]["require_online"]) echo' selected="selected"'; echo('>Ja</option>
+                                                            <option value="0"'); if (isset($context["shop_perk_details"]["require_online"]) && !$context["shop_perk_details"]["require_online"]) echo' selected="selected"'; echo('>Nein</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -450,29 +460,29 @@ function template_main() {
                             // Show Main Site
                             else {
                                 echo('
-                                <h4>Welcome to the BangL.de Perk Shop!</h4>
-                                <div class="shop_index">
-                                <div>
-                                <br />
-                                Items and ranks purchased in this Perk Shop are non-refundable.<br />
-                                <br />
-                                Please make sure you have inventory space open to make room for the purchase.<br />
-                                <br />
-                                All money gained from this Perk Shop, is used to keep this server alive.<br />
-                                We use this money to pay for the server as well as save up for a better one!<br />
-                                Without money, we are without server.<br />
-                                <br />
-                                Thank you!<br />
-                                <br />
-                                Click on the perks on the left to see a description.<br />
-                                <br />
-                                You can also check your active perks ingame, using the "/perk" command.<br />
-                                </div>
-                                </div>
                                 ');
                             }
 
-                        echo('</div>
+							echo('
+							<hr />
+							<div class="shop_footer">
+								<div class="mini">
+									<br />
+									Gegenst&auml;nde und R&auml;nge, die durch eine Spende &uuml;ber diesen Shop gekauft werden, sind nicht r&uuml;ckerstattungsf&auml;hig<br />
+									und werden durch die Serverbetreiber auf freiwilliger Basis durchgef&uuml;hrt.<br />
+									Der Inhalt und Wert der Gegenst&auml;ndege und R&auml;nge kann jederzeit ge&auml;ndert oder ganz entfernt werden.<br />
+									Eine Spende kann ohne Begr&uuml;ndung abgewiesen werden.<br />
+									<br />
+									Bitte gehe sicher genug freien Platz im Inventar zu haben!<br />
+									Nicht erhaltene Gegenst&auml;nde durch ein &uuml;berf&uuml;lltes Inventar werden nicht ersetzt.<br />
+									<br />
+									Bei Ablauf der vereinbarten Zeit eines Perk &uuml;ber Zeit (z.B. R&auml;nge) wird der Perk umgehend entfernt.<br />
+									<br />
+									Tipp: Auch ingame kann man per "/perk" Befehl einen &Uuml;berblick &uuml;ber seine Perk-Eink&auml;ufe behalten.<br />
+									Keine USt-ID-Nr., da Kleingewerbe gem&auml;&szlig; &sect;19 Abs. 1 UStG.<br />
+								</div>
+							</div>
+						</div>
                     </div>
                     <div class="shop_bar"><span></span></div>
                 </div>

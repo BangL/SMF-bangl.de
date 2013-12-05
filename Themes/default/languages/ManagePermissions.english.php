@@ -342,9 +342,4 @@ $txt['auto_approve_topics'] = 'Post new topics, without requiring approval';
 $txt['auto_approve_replies'] = 'Post replies to topics, without requiring approval';
 $txt['auto_approve_attachments'] = 'Post attachments, without requiring approval';
 
-// ======= edit by BangL start
-$txt['permissionname_use_shop'] = 'Use the perk shop';
-$txt['permissionhelp_use_shop'] = 'See and purchase stuff in the perk shop.';
-$txt['cannot_use_shop'] = 'Sorry, but you can\'t use the perk shop.';
-// ======= edit by BangL end
 ?>

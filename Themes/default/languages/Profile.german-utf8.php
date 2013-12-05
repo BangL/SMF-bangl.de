@@ -357,7 +357,10 @@ $txt['request_group_membership'] = 'Gruppenmitgliedschaft anfordern';
 $txt['request_group_membership_desc'] = 'Bevor sie dieser Gruppe beitreten können, muss ihre Anfrage von einem Moderator genehmigt werden. Bitte geben sie einen Grund für ihren Beitritt an';
 $txt['submit_request'] = 'Anforderung übermitteln';
 
-$txt['profile_updated_own'] = 'Ihr Profil wurde erfolgreich aktualisiert.';
+// ======= edit by BangL start
+$txt['profile_updated_own'] = 'Ihr Profil wurde erfolgreich aktualisiert.<br />Wenn der "Minecraft Name" nachdem Sie ihn festgelegt haben leer bleibt, ist der Name den Sie eingegeben haben bereits auf einem anderen Forumkonto validiert worden.';
+//$txt['profile_updated_own'] = 'Ihr Profil wurde erfolgreich aktualisiert.';
+// ======= edit by BangL end
 $txt['profile_updated_else'] = 'Das Profil von %1$s wurde erfolgreich aktualisiert.';
 
 $txt['profile_error_signature_max_length'] = 'Ihre Signatur kann nicht mehr wie %1$d Zeichen enthalten';

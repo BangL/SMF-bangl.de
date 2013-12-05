@@ -127,12 +127,15 @@ div.shop_paypal div,
 div.shop_perk_details div,
 div.shop_cart_view div,
 div.perk_settings,
-div.shop_index div {
+div.shop_footer div {
     width: 706px;
     margin-right: 5px;
     margin-left: 5px;
     float: none;
-    clear: both;
+    clear: both; 
+}
+.mini {
+    font-size: 75%; 
 }
 div.perk_name,
 div.perk_command_wrapper,

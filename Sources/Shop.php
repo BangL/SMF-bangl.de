@@ -109,7 +109,7 @@ function ShopPerk() {
     if (!$context["user"]["is_logged"]) return;
 
     if (!isset($_GET['perk_id'])) {
-        array_push($context["shop_errors"], "Invalid perk id");
+        array_push($context["shop_errors"], "Ung&uuml;ltige perk id");
         ShopIndex();
         return;
     }
@@ -122,7 +122,7 @@ function ShopPerk() {
     }
 
     if (empty($context["shop_perk_details"]['perk_id'])) {
-        array_push($context["shop_errors"], "Invalid perk id");
+        array_push($context["shop_errors"], "Ung&uuml;ltige perk id");
         ShopIndex();
         return;
     }
@@ -174,6 +174,7 @@ function ShopCart() {
     }
 
     PerkMenu();
+    CartOverview();
 }
 
 function ShopPerkForm() {
@@ -198,7 +199,7 @@ function ShopPerkForm() {
         $context["shop_perk_details"] = db_get_perk($_GET['perk_id'], 0);
         if (empty($context["shop_perk_details"]['perk_id'])) {
             // Perk id is invalid
-            array_push($context["shop_errors"], "Invalid perk id");
+            array_push($context["shop_errors"], "Ung&uuml;ltige perk id");
             return;
         }
 
@@ -287,7 +288,7 @@ function PerkMenu() {
 
     // Perks There?
     if (count($context["shop_perks"]) == 0) {
-        array_push($context["shop_errors"], 'No perks availible.');
+        array_push($context["shop_errors"], 'Keine perks verf&uuml;gbar.');
     }
 }
 
@@ -311,7 +312,7 @@ function ShopCartitemAdd() {
     if (!$context["user"]["is_logged"]) return;
 
     if (!isset($_GET['perk_id'])) {
-        array_push($context["shop_errors"], "Invalid perk id");
+        array_push($context["shop_errors"], "Ung&uuml;ltige perk id");
         ShopCart();
         return;
     }
@@ -332,7 +333,7 @@ function ShopCartitemAdd() {
         $context["shop_perk_details"] = db_get_perk($_GET['perk_id'], $len);
     }
     if (!isset($context["shop_perk_details"]['perk_id'])) {
-        array_push($context["shop_errors"], "Invalid perk id");
+        array_push($context["shop_errors"], "Ung&uuml;ltige perk id");
         ShopIndex();
         return;
     }
@@ -341,7 +342,7 @@ function ShopCartitemAdd() {
     db_add_cartitem($context['user']['id'], $context["shop_perk_details"]['perk_id'], $len);
 
     // Success!
-    array_push($context["shop_success"], 'Perk added to cart.');
+    array_push($context["shop_success"], 'Perk zum Warenkorb hinzugef&uuml;gt.');
     ShopCart();
 }
 
@@ -350,12 +351,12 @@ function ShopCartitemRemove() {
     if (!$context["user"]["is_logged"]) return;
 
     if (!isset($_GET['perk_id'])) {
-        array_push($context["shop_errors"], 'Invalid perk id.');
+        array_push($context["shop_errors"], 'Ung&uuml;ltige perk id.');
     }
 
     db_remove_cartitem($context["user"]["id"], $_GET["perk_id"]);
 
-    array_push($context["shop_success"], 'Perk removed from cart.');
+    array_push($context["shop_success"], 'Perk vom Warenkorb entfernt.');
     ShopCart();
 }
 
@@ -408,9 +409,9 @@ function ShopPerkSave() {
     db_add_perk($perk);
 
     if ($_GET['sa'] == "editperksave") {
-        array_push($context["shop_success"], "Perk edited.");
+        array_push($context["shop_success"], "Perk bearbeitet.");
     } elseif ($_GET['sa'] == "addperksave") {
-        array_push($context["shop_success"], "Perk added.");
+        array_push($context["shop_success"], "Perk hinzugef&uuml;gt.");
     }
     ShopIndex();
 }
@@ -670,7 +671,7 @@ function ShopCheckout() {
 function ShopSuccess() {
     global $context;
     if ($context["user"]["is_logged"]) {
-        array_push($context["shop_success"], 'Thank you for your purchase.<br />Remember to use "/perk reload" ingame, or simply relog.');
+        array_push($context["shop_success"], 'Danke f&uuml;r Ihre Spende.<br />Denken Sie dran im Spiel "/perk reload" zu benutzen, oder loggen Sie sich neu ein ;).');
 
         //Clear cart
         db_clear_cart($context["user"]["id"]);

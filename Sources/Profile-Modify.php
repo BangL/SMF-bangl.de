@@ -1319,7 +1319,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 	if (!empty($changes) && empty($context['password_auth_failed']))
 	{
 		// ======= edit by BangL start
-		for ($i = 0; $i <= count($changes) - 1; $i++)
+		for ($i = 0; $i <= (count($changes) - 1); $i++)
 		{
 
 			// Is this the Minecraft Name?
@@ -1354,7 +1354,24 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 					$changes[$i][2] = "";
 					$post_errors[] = "This Minecraft name is already validated on another forum account.";
 				}
-
+				
+				// Get the current Minecraft Name of the current user
+				$request = $smcFunc['db_query']('', '
+					SELECT value
+					FROM {db_prefix}themes
+					WHERE variable = "cust_minecr"
+					AND id_theme = 1
+					AND id_member = {int:id}
+					LIMIT 1',
+					array('id' => $memID)
+				);
+				$currentName = "";
+				while ($row = $smcFunc['db_fetch_assoc']($request))
+				{
+					$currentName = strtolower($row['value']);
+				}
+				$smcFunc['db_free_result']($request);
+				
 				// Delete validation data
 				// and minecraft name
 				// if name is clear (that means: also if minecraft name was already declared as validated)
@@ -1378,8 +1395,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 					unset($changes[$i]);
 					unset($log_changes[$i]);
 				}
-				// Reset validation data if name was edited/set
-				else
+				else if ($currentName != strtolower(trim($changes[$i][2])))
 				{
 					// Set Validated to false
 					$smcFunc['db_insert']('replace',
@@ -1407,6 +1423,14 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 								'id_member')
 					);
 				}
+			}
+			// Never ever edit the validated flag / validation code manually
+			if ($changes[$i][1] == "cust_valida"
+				|| $changes[$i][1] == "cust_valida0")
+			{
+				// Dont save this
+				unset($changes[$i]);
+				unset($log_changes[$i]);
 			}
 		}
 		// ======= edit by BangL stop
