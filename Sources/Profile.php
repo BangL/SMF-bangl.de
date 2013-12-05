@@ -853,7 +853,6 @@ function loadCustomFields($memID, $area = 'summary')
 					&& (!isset($context['mc_validated'])
 					|| !$context['mc_validated']))
 			{
-				echo("generated a new code");
 				// Generate the new validate code
 				$context['mc_validate_code'] = uniqid();
 
